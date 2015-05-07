@@ -20,7 +20,7 @@ public class Frame {
 		
 		// Hide cursor
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Cursor c = toolkit.createCustomCursor(toolkit.getImage("assets/blank_cursor.png") , new Point(frame.getX(), frame.getY()), "img");
+		Cursor c = toolkit.createCustomCursor(toolkit.getImage("") , new Point(frame.getX(), frame.getY()), "img");
 		frame.setCursor (c);
 	}
 	
