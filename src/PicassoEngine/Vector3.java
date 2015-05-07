@@ -1,3 +1,5 @@
+package PicassoEngine;
+
 public class Vector3
 {
 	public double x;
@@ -14,6 +16,12 @@ public class Vector3
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+	
+	public void scale(double scalar) {
+		this.x *= scalar;
+		this.y *= scalar;
+		this.z *= scalar;
 	}
 	
 	public String toString() {
