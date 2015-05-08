@@ -186,12 +186,14 @@ public class Renderer {
 		
 		Vector3 newPoint = new Vector3();
 		
+		double aspectRatio = (double) frame.getFrame().getWidth() / frame.getFrame().getHeight();
 		double ez = 1 / Math.tan(camera.getFov() / 2);
-		double x = (screenPoint.x - .5) * (ez / screenPoint.z);
+		double x = (screenPoint.x - .5) * (ez / screenPoint.z) / aspectRatio;
 		double y = -(screenPoint.y - .5) * (ez / screenPoint.z);
 		
-		newPoint.x = (int) (x * frame.getFrame().getWidth()) + frame.getFrame().getWidth() / 2;
-		newPoint.y = (int) (y * frame.getFrame().getHeight()) + frame.getFrame().getHeight() / 2;
+		
+		newPoint.x = (int) (x * frame.getFrame().getWidth() + frame.getFrame().getWidth() / 2);
+		newPoint.y = (int) (y * frame.getFrame().getHeight() + frame.getFrame().getHeight() / 2);
 		newPoint.z = screenPoint.z;
 		
 		return newPoint;
