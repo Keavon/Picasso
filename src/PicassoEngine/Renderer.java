@@ -133,7 +133,10 @@ public class Renderer {
 				
 				if (onScreen) {
 					// Add this face as a polygon in the final array
-					polygons.add(new Polygon2D(faceVertices, project(centroids[face]), faces[face].getColor()));
+					Vector3 v1 = vertices[vertexIndexes[0]].difference(vertices[vertexIndexes[1]]);
+					Vector3 v2 = vertices[vertexIndexes[2]].difference(vertices[vertexIndexes[1]]);
+					double brightness = v1.cross(v2).angle(new Vector3(5, 10, 0)) / Math.PI;
+					polygons.add(new Polygon2D(faceVertices, project(centroids[face]), faces[face].getColor(), brightness));
 				}
 			}
 		}
@@ -162,9 +165,9 @@ public class Renderer {
 			
 			context.setColor(Color.decode("#" + polygon.getColor()));
 			context.fillPolygon(x, y, x.length);
-			context.setColor(Color.black); // Set color to black for the below options
-			context.drawPolygon(x, y, x.length); // Draw wireframe outline
-			//context.drawOval((int) polygon.getProjectedCentroid().x, (int) polygon.getProjectedCentroid().y, 10, 10); // Draw centroid used in z-sorting
+//			context.setColor(Color.black); // Set color to black for the below options
+//			context.drawPolygon(x, y, x.length); // Draw wireframe outline
+//			context.drawOval((int) polygon.getProjectedCentroid().x, (int) polygon.getProjectedCentroid().y, 10, 10); // Draw centroid used in z-sorting
 		}
 	}
 	
