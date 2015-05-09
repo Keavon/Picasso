@@ -16,5 +16,10 @@ public class MarbleGame {
 		// Create model
 		Model cube = new Model("models/scene.obj");
 		scene.addGameObject(cube);
+		
+		// Create ball
+		Model ball = new Model("models/ball.obj", new Vector3(-7, 1, 0));
+		ball.addScript(new Spin(ball));
+		scene.addGameObject(ball);
 	}
 }

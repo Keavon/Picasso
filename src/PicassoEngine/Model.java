@@ -3,14 +3,17 @@ package PicassoEngine;
 import java.util.*;
 import java.io.*;
 
-public class Model extends GameObject
-{
+public class Model extends GameObject {
 	// Array of all vertices in this model
 	private Vector3[] vertices;
+	// Array of all vertices in this model after transformation
+	private Vector3[] transformedVertices;
 	// Array of all the faces in this model
 	private Face[] faces;
 	// Array containing the coordinate of the center of each face
 	private Vector3[] faceCenters;
+	// Array containing the coordinate of the center of each face after transformation
+	private Vector3[] transformedFaceCenters;
 	
 	// Says whether or not this object is a collider
 	private boolean collides = false;
@@ -31,13 +34,22 @@ public class Model extends GameObject
 	}
 	
 	public Model(String file, Vector3 position, Vector3 rotation) {
-		super(file, position, rotation);
+		super(file, position);
 		loadObj(file);
 		findCentroids();
+		setRotation(rotation);
 	}
 	
 	public Vector3[] getVertices() {
-		return vertices;
+		if (super.getPosition().x == 0 && super.getPosition().y == 0 && super.getPosition().z == 0) {
+			return transformedVertices;
+		} else {
+			Vector3[] result = new Vector3[transformedVertices.length];
+			for (int i = 0; i < transformedVertices.length; i++) {
+				result[i] = transformedVertices[i].sum(super.getPosition());
+			}
+			return result;
+		}
 	}
 	
 	public Face[] getFaces() {
@@ -45,7 +57,37 @@ public class Model extends GameObject
 	}
 	
 	public Vector3[] getFaceCenters() {
-		return faceCenters;
+		if (super.getPosition().x == 0 && super.getPosition().y == 0 && super.getPosition().z == 0) {
+			return transformedFaceCenters;
+		} else {
+			Vector3[] result = new Vector3[transformedFaceCenters.length];
+			for (int i = 0; i < transformedFaceCenters.length; i++) {
+				result[i] = transformedFaceCenters[i].sum(super.getPosition());
+			}
+			return result;
+		}
+	}
+	
+	public void setRotation(Vector3 newRotation) {
+		super.setRotation(newRotation);
+		
+		// Rotate vertices
+		for (int i = 0; i < vertices.length; i++) {
+			transformedVertices[i].x = vertices[i].x * (Math.cos(super.getRotation().y) * Math.cos(super.getRotation().z)) + vertices[i].y * (Math.cos(super.getRotation().x) * Math.sin(super.getRotation().z) + Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z)) + vertices[i].z * (Math.sin(super.getRotation().x) * Math.sin(super.getRotation().z) - Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z));
+			transformedVertices[i].y = vertices[i].x * (-Math.cos(super.getRotation().y) * Math.sin(super.getRotation().z)) + vertices[i].y * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().z) - Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z)) + vertices[i].z * (Math.sin(super.getRotation().x) * Math.cos(super.getRotation().z) + Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z));
+			transformedVertices[i].z = vertices[i].x * (Math.sin(super.getRotation().y)) + vertices[i].y * (-Math.sin(super.getRotation().x) * Math.cos(super.getRotation().y)) + vertices[i].z * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().y));
+		}
+		
+		// Rotate face centroids
+		for (int i = 0; i < faceCenters.length; i++) {
+			transformedFaceCenters[i].x = faceCenters[i].x * (Math.cos(super.getRotation().y) * Math.cos(super.getRotation().z)) + faceCenters[i].y * (Math.cos(super.getRotation().x) * Math.sin(super.getRotation().z) + Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z)) + faceCenters[i].z * (Math.sin(super.getRotation().x) * Math.sin(super.getRotation().z) - Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z));
+			transformedFaceCenters[i].y = faceCenters[i].x * (-Math.cos(super.getRotation().y) * Math.sin(super.getRotation().z)) + faceCenters[i].y * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().z) - Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z)) + faceCenters[i].z * (Math.sin(super.getRotation().x) * Math.cos(super.getRotation().z) + Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z));
+			transformedFaceCenters[i].z = faceCenters[i].x * (Math.sin(super.getRotation().y)) + faceCenters[i].y * (-Math.sin(super.getRotation().x) * Math.cos(super.getRotation().y)) + faceCenters[i].z * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().y));
+		}
+	}
+	
+	public void addRotation(Vector3 additionalRotation) {
+		setRotation(new Vector3(getRotation().x + additionalRotation.x, getRotation().y + additionalRotation.y, getRotation().z + additionalRotation.z));
 	}
 	
 	// Loads an OBJ file from a specified path into into this PicassoEngine.Model
@@ -103,11 +145,14 @@ public class Model extends GameObject
 			
 			// Initialize the vertices and faces of this PicassoEngine.Model
 			vertices = new Vector3[verts.size()];
+			transformedVertices = new Vector3[vertices.length];
 			faces = new Face[faceLists.size()];
 			
 			// Sets the vertices 
 			for (int i = 0; i < vertices.length; i++) {
-				vertices[i] = verts.get(i);
+				Vector3 vertex = verts.get(i);
+				vertices[i] = vertex;
+				transformedVertices[i] = new Vector3(vertex.x, vertex.y, vertex.z);
 			}
 			for (int i = 0; i < faces.length; i++) {
 				faces[i] = faceLists.get(i);
@@ -121,6 +166,7 @@ public class Model extends GameObject
 	public void findCentroids() {
 		// Declare length
 		faceCenters = new Vector3[faces.length];
+		transformedFaceCenters = new Vector3[faces.length];
 		
 		// Go through every face
 		for (int face = 0; face < faces.length; face++) {
@@ -212,6 +258,8 @@ public class Model extends GameObject
 			if (Math.abs(twiceAreaYZ) <= 0.0001 && Math.abs(twiceAreaZX) <= 0.0001) {
 				faceCenters[face].z = vertices[verts[0]].z;
 			}
+			
+			transformedFaceCenters[face] = new Vector3(faceCenters[face].x, faceCenters[face].y, faceCenters[face].z);
 		}
 	}
 	

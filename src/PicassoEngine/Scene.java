@@ -41,7 +41,7 @@ public class Scene {
 	
 	public void callUpdate() {
 		for (GameObject object : gameObjects) {
-			for (PicassoScript script : object.scripts) {
+			for (PicassoScript script : object.getScripts()) {
 				script.Update();
 			}
 		}
@@ -49,8 +49,8 @@ public class Scene {
 	
 	public void callLateUpdate() {
 		for (int object = 0; object < gameObjects.size(); object++) {
-			for (int script = 0; script < gameObjects.get(object).scripts.size(); script++) {
-				gameObjects.get(object).scripts.get(script).LateUpdate();
+			for (int script = 0; script < gameObjects.get(object).getScripts().size(); script++) {
+				gameObjects.get(object).getScripts().get(script).LateUpdate();
 			}
 		}
 	}

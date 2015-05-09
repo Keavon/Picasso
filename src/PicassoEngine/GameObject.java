@@ -3,10 +3,10 @@ package PicassoEngine;
 import java.util.ArrayList;
 
 public class GameObject {
-	public String name;
-	public Vector3 position;
-	public Vector3 rotation;
-	public ArrayList<PicassoScript> scripts;
+	private String name;
+	private Vector3 position;
+	private Vector3 rotation;
+	private ArrayList<PicassoScript> scripts;
 	
 	public GameObject(String name) {
 		this(name, new Vector3(), new Vector3());
@@ -25,5 +25,29 @@ public class GameObject {
 	
 	public void addScript(PicassoScript script) {
 		scripts.add(script);
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public Vector3 getPosition() {
+		return position;
+	}
+	
+	public void setPosition(Vector3 position) {
+		this.position = position;
+	}
+	
+	public Vector3 getRotation() {
+		return rotation;
+	}
+	
+	public void setRotation(Vector3 rotation) {
+		this.rotation = rotation;
+	}
+	
+	public ArrayList<PicassoScript> getScripts() {
+		return scripts;
 	}
 }
