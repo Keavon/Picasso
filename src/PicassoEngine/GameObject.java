@@ -39,12 +39,20 @@ public class GameObject {
 		this.position = position;
 	}
 	
+	public void addPosition(Vector3 deltaPosition) {
+		setPosition(getPosition().sum(deltaPosition));
+	}
+	
 	public Vector3 getRotation() {
 		return rotation;
 	}
 	
 	public void setRotation(Vector3 rotation) {
 		this.rotation = rotation;
+	}
+	
+	public void addRotation(Vector3 deltaRotation) {
+		setRotation(getRotation().sum(deltaRotation));
 	}
 	
 	public ArrayList<PicassoScript> getScripts() {

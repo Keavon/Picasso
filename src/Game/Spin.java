@@ -9,6 +9,7 @@ public class Spin extends PicassoScript {
 	
 	public void Update() {
 		Model model = (Model) gameObject;
-		model.addRotation(new Vector3(0, Time.deltaTime, 0));
+		model.addRotation(new Vector3(Time.deltaTime, 0, 0));
+		model.addPosition(new Vector3(Time.deltaTime, 0, 0));
 	}
 }

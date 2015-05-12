@@ -86,10 +86,6 @@ public class Model extends GameObject {
 		}
 	}
 	
-	public void addRotation(Vector3 additionalRotation) {
-		setRotation(new Vector3(getRotation().x + additionalRotation.x, getRotation().y + additionalRotation.y, getRotation().z + additionalRotation.z));
-	}
-	
 	// Loads an OBJ file from a specified path into into this PicassoEngine.Model
 	public void loadObj(String file) {
 		ArrayList<Vector3> verts = new ArrayList<Vector3>();
