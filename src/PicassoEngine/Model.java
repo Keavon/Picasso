@@ -14,10 +14,8 @@ public class Model extends GameObject {
 	private Vector3[] faceCenters;
 	// Array containing the coordinate of the center of each face after transformation
 	private Vector3[] transformedFaceCenters;
-	
 	// Says whether or not this object is a collider
 	private boolean collides = false;
-	
 	// Says whether or not this object is a trigger region
 	private boolean trigger = false;
 	
@@ -40,13 +38,21 @@ public class Model extends GameObject {
 		setRotation(rotation);
 	}
 	
+	public boolean isCollides() {
+		return collides;
+	}
+	
+	public void setCollides(boolean collides) {
+		this.collides = collides;
+	}
+	
 	public Vector3[] getVertices() {
 		if (super.getPosition().x == 0 && super.getPosition().y == 0 && super.getPosition().z == 0) {
 			return transformedVertices;
 		} else {
 			Vector3[] result = new Vector3[transformedVertices.length];
 			for (int i = 0; i < transformedVertices.length; i++) {
-				result[i] = transformedVertices[i].sum(super.getPosition());
+				result[i] = transformedVertices[i].getSum(super.getPosition());
 			}
 			return result;
 		}
@@ -62,7 +68,7 @@ public class Model extends GameObject {
 		} else {
 			Vector3[] result = new Vector3[transformedFaceCenters.length];
 			for (int i = 0; i < transformedFaceCenters.length; i++) {
-				result[i] = transformedFaceCenters[i].sum(super.getPosition());
+				result[i] = transformedFaceCenters[i].getSum(super.getPosition());
 			}
 			return result;
 		}

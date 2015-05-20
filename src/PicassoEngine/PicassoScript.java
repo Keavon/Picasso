@@ -22,4 +22,8 @@ public class PicassoScript {
 	public void LateUpdate() {
 		// Calls every frame after Update()
 	}
+	
+	public void FixedUpdate() {
+		// Calls every physics step, every 0.02 seconds
+	}
 }

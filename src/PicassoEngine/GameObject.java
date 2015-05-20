@@ -40,7 +40,7 @@ public class GameObject {
 	}
 	
 	public void addPosition(Vector3 deltaPosition) {
-		setPosition(getPosition().sum(deltaPosition));
+		setPosition(getPosition().getSum(deltaPosition));
 	}
 	
 	public Vector3 getRotation() {
@@ -52,7 +52,7 @@ public class GameObject {
 	}
 	
 	public void addRotation(Vector3 deltaRotation) {
-		setRotation(getRotation().sum(deltaRotation));
+		setRotation(getRotation().getSum(deltaRotation));
 	}
 	
 	public ArrayList<PicassoScript> getScripts() {

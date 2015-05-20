@@ -4,11 +4,15 @@ import java.util.ArrayList;
 
 public class Scene {
 	private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+	private Vector3 gravity = new Vector3(0, -9.8, 0);
 	private Renderer renderer;
 	private Camera activeCamera;
 	
 	public Scene(Frame frame) {
 		this.renderer = new Renderer(frame);
+		Physics physics = new Physics(this);
+		Thread physicsThread = new Thread(physics);
+		physicsThread.start();
 	}
 	
 	public void addGameObject(GameObject object) {
@@ -48,10 +52,54 @@ public class Scene {
 	}
 	
 	public void callLateUpdate() {
-		for (int object = 0; object < gameObjects.size(); object++) {
-			for (int script = 0; script < gameObjects.get(object).getScripts().size(); script++) {
-				gameObjects.get(object).getScripts().get(script).LateUpdate();
+		for (GameObject object : gameObjects) {
+			for (PicassoScript script : object.getScripts()) {
+				script.LateUpdate();
 			}
 		}
+	}
+	
+	public void callFixedUpdate() {
+		for (GameObject object : gameObjects) {
+			for (PicassoScript script : object.getScripts()) {
+				script.FixedUpdate();
+			}
+		}
+	}
+	
+	public RigidBody[] getRigidBodies() {
+		ArrayList<RigidBody> rigidBodies = new ArrayList<RigidBody>();
+		for (GameObject gameObject : gameObjects) {
+			if (gameObject instanceof RigidBody) {
+				rigidBodies.add((RigidBody) gameObject);
+			}
+		}
+		
+		RigidBody[] result = new RigidBody[rigidBodies.size()];
+		for (int i = 0; i < rigidBodies.size(); i++) {
+			result[i] = rigidBodies.get(i);
+		}
+		
+		return result;
+	}
+	
+	public Model[] getColliders() {
+		ArrayList<Model> colliders = new ArrayList<Model>();
+		for (GameObject gameObject : gameObjects) {
+			if (gameObject instanceof Model && ((Model) gameObject).isCollides()) {
+				colliders.add((RigidBody) gameObject);
+			}
+		}
+		
+		Model[] result = new Model[colliders.size()];
+		for (int i = 0; i < colliders.size(); i++) {
+			result[i] = colliders.get(i);
+		}
+		
+		return result;
+	}
+	
+	public Vector3 getGravity() {
+		return gravity;
 	}
 }
