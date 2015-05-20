@@ -73,6 +73,10 @@ public class Vector3 {
 		return this.getSum(normal.getScaled(-2 * this.getDotProduct(normal)));
 	}
 	
+	public Vector3 getCopy() {
+		return new Vector3(x, y, z);
+	}
+	
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";
 	}

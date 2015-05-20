@@ -87,7 +87,7 @@ public class Scene {
 		ArrayList<Model> colliders = new ArrayList<Model>();
 		for (GameObject gameObject : gameObjects) {
 			if (gameObject instanceof Model && ((Model) gameObject).isCollides()) {
-				colliders.add((RigidBody) gameObject);
+				colliders.add((Model) gameObject);
 			}
 		}
 		

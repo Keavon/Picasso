@@ -15,6 +15,7 @@ public class MarbleGame {
 		
 		// Create model
 		Model plane = new Model("models/plane.obj");
+		plane.setCollides(true);
 		scene.addGameObject(plane);
 		
 		// Create ball
