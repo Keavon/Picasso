@@ -24,7 +24,6 @@ public class Physics implements Runnable {
 	
 	public void physicsStep() {
 		RigidBody[] rigidBodies = scene.getRigidBodies();
-		Model[] colliders = scene.getColliders();
 		
 		// Act on each rigidbody
 		for (RigidBody item : rigidBodies) {
@@ -42,17 +41,29 @@ public class Physics implements Runnable {
 			for (Vector3 collisionPoint : collisionPoints) {
 				if (collisionPoint != null) {
 					// Collision movement unit vector
-					Vector3 actionVector = new Vector3(collisionPoint.x - item.getPosition().x, collisionPoint.y - item.getPosition().y, collisionPoint.z - item.getPosition().z);
-					actionVector.normalize();
-					
-					// Collision movement unit vector reflected on face of collision
-					Vector3 reflectionVector = actionVector.getReflection(actionVector);
+					Vector3 collisionNormal = collisionPoint.getDifference(item.getPosition());
+					double surfacePenetration = item.getRadius() - collisionNormal.getMagnitude();
+					collisionNormal.normalize();
 					
 					// Add collision to the total collision forces
-					collisionForces.add(reflectionVector.getProduct(forcesBeforeCollision).getScaled(-1));
+					Vector3 normalForce = collisionNormal.getScaled(Math.abs(item.getMass() * forcesBeforeCollision.getDotProduct(collisionNormal)));
+					//System.out.println(normalForce);
+					//collisionForces.add(normalForce);
 					
-					// Reflect the velocity
-					item.setVelocity(item.getVelocity().getReflection(actionVector).getScaled(0.81));
+					// Reflect velocity
+					Vector3 normalComponent = collisionNormal.getScaled(item.getVelocity().getDotProduct(collisionNormal));
+					Vector3 tangentComponent = normalComponent.getDifference(item.getVelocity());
+					normalComponent.scale(-1);
+					
+					// Scale by bounciness of ball
+					normalComponent.scale(0.75);
+					
+					// Set bounced velocity
+					item.setVelocity(normalComponent.getSum(tangentComponent));
+					
+					// Move item to surface so it isn't penetrating the collider
+					// NOTE: this might cause bugs with multiple sources of collision and may violate the conservation of energy
+					item.addPosition(collisionNormal.getNormalized().getScaled(surfacePenetration));
 				}
 			}
 			
@@ -62,12 +73,14 @@ public class Physics implements Runnable {
 			Vector3 forceSum = new Vector3();
 			forceSum.add(forcesBeforeCollision);
 			forceSum.add(collisionForces);
+			//System.out.println(forceSum);
 			
 			// Find acceleration from total forces
 			Vector3 acceleration = forceSum.getScaled(1.0 / item.getMass());
 			
 			// Find velocity from acceleration and mass, adding it to the velocity of the object
 			item.addVelocity(acceleration.getScaled(0.02 * item.getMass()));
+			//System.out.println(item.getVelocity().getMagnitude());
 			
 			// Displace rigidbodies with velocity
 			item.addPosition(item.getVelocity().getScaled(0.02));
@@ -102,14 +115,15 @@ public class Physics implements Runnable {
 		Vector3 faceNormal = v1.getCrossProduct(v2);
 		faceNormal.normalize();
 		
-		double plane = -1 * (faceNormal.x * planePoints[0].x + faceNormal.y * planePoints[0].y + faceNormal.z * planePoints[0].z);
+		double plane = -(faceNormal.x * planePoints[0].x + faceNormal.y * planePoints[0].y + faceNormal.z * planePoints[0].z);
 		double distanceToPlane = faceNormal.x * ball.x + faceNormal.y * ball.y + faceNormal.z * ball.z + plane;
 		
-		if (distanceToPlane <= 0.5) {
-			Vector3 ballToCollision = faceNormal.getScaled(-distanceToPlane);
-			return ball.getSum(ballToCollision);
-		} else {
+		// No collision if the collision distance is further than the ball's radius from the plane
+		if (distanceToPlane > radius) {
 			return null;
 		}
+		
+		Vector3 ballCenterToCollisionPoint = faceNormal.getScaled(-distanceToPlane);
+		return ball.getSum(ballCenterToCollisionPoint);
 	}
 }

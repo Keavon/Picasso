@@ -69,6 +69,10 @@ public class Vector3 {
 		scale(1.0 / getMagnitude());
 	}
 	
+	public Vector3 getNormalized() {
+		return getScaled(1.0 / getMagnitude());
+	}
+	
 	public Vector3 getReflection(Vector3 normal) {
 		return this.getSum(normal.getScaled(-2 * this.getDotProduct(normal)));
 	}
