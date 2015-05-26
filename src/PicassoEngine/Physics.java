@@ -87,7 +87,7 @@ public class Physics implements Runnable {
 		}
 	}
 	
-	public Vector3[] worldCollision(Vector3 ball, double radius) {
+	private Vector3[] worldCollision(Vector3 ball, double radius) {
 		ArrayList<Vector3> collisionPoints = new ArrayList<Vector3>();
 		for (Model object : scene.getColliders()) {
 			Vector3[] theseCollisions = objectCollision(object, ball, radius);
@@ -104,17 +104,39 @@ public class Physics implements Runnable {
 		return result;
 	}
 	
-	public Vector3[] objectCollision(Model object, Vector3 ball, double radius) {
-		return new Vector3[]{planeCollision(object.getVertices(), ball, radius)};
+	private Vector3[] objectCollision(Model object, Vector3 ball, double radius) {
+		// Stores all the collision points
+		ArrayList<Vector3> collisionPoints = new ArrayList<Vector3>();
+		
+		// Go through each face in the model
+		for (int face = 0; face < object.getFaces().length; face++) {
+			// Gather the vertices in this face
+			int[] vertexIndexes = object.getFaces()[face].getVertexIndexes();
+			Vector3[] orderedVertices = new Vector3[vertexIndexes.length];
+			for (int i = 0; i < vertexIndexes.length; i++) {
+				orderedVertices[i] = object.getVertices()[vertexIndexes[i]];
+			}
+			
+			// Find any collisions on the face
+			collisionPoints.add(planeCollision(orderedVertices, ball, radius));
+		}
+		
+		// Return ArrayList of collision points as an array
+		Vector3[] result = new Vector3[collisionPoints.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = collisionPoints.get(i);
+		}
+		return result;
 	}
 	
-	public Vector3 planeCollision(Vector3[] planePoints, Vector3 ball, double radius) {
+	private Vector3 planeCollision(Vector3[] planePoints, Vector3 ball, double radius) {
 		// Find unit vector normal to the face
 		Vector3 v1 = planePoints[2].getDifference(planePoints[1]);
 		Vector3 v2 = planePoints[0].getDifference(planePoints[1]);
 		Vector3 faceNormal = v1.getCrossProduct(v2);
 		faceNormal.normalize();
 		
+		// Find closest distance from center of ball to plane
 		double plane = -(faceNormal.x * planePoints[0].x + faceNormal.y * planePoints[0].y + faceNormal.z * planePoints[0].z);
 		double distanceToPlane = faceNormal.x * ball.x + faceNormal.y * ball.y + faceNormal.z * ball.z + plane;
 		
@@ -123,7 +145,85 @@ public class Physics implements Runnable {
 			return null;
 		}
 		
+		// Find and return 3D point of collision
 		Vector3 ballCenterToCollisionPoint = faceNormal.getScaled(-distanceToPlane);
-		return ball.getSum(ballCenterToCollisionPoint);
+		Vector3 collisionPoint = ball.getSum(ballCenterToCollisionPoint);
+		
+		if (collisionOnFace(planePoints, collisionPoint)) {
+			return collisionPoint;
+		}
+		
+		return null;
+	}
+	
+	public boolean collisionOnFace(Vector3[] planePoints, Vector3 collisionPoint) {
+		// Find area of polygon
+		double areaXY = 0;
+		double areaYZ = 0;
+		double areaZX = 0;
+		
+		// Find areas
+		for (int i = 0; i < planePoints.length - 1; i++) {
+			areaXY += planePoints[i].x * planePoints[i + 1].y - planePoints[i + 1].x * planePoints[i].y;
+			areaYZ += planePoints[i].y * planePoints[i + 1].z - planePoints[i + 1].y * planePoints[i].z;
+			areaZX += planePoints[i].z * planePoints[i + 1].x - planePoints[i + 1].z * planePoints[i].x;
+		}
+		// Final case that loops from the last to the first vertex in the array
+		areaXY += planePoints[planePoints.length - 1].x * planePoints[0].y - planePoints[0].x * planePoints[planePoints.length - 1].y;
+		areaYZ += planePoints[planePoints.length - 1].y * planePoints[0].z - planePoints[0].y * planePoints[planePoints.length - 1].z;
+		areaZX += planePoints[planePoints.length - 1].z * planePoints[0].x - planePoints[0].z * planePoints[planePoints.length - 1].x;
+		
+		// Project 3D plane into 2D
+		Vector2[] points2D = new Vector2[planePoints.length];
+		double a;
+		double b;
+		if (areaXY > areaYZ && areaXY > areaZX) {
+			for (int i = 0; i < points2D.length; i++) {
+				points2D[i] = new Vector2(planePoints[i].x, planePoints[i].y);
+			}
+			a = collisionPoint.x;
+			b = collisionPoint.y;
+		} else if (areaYZ > areaZX) {
+			for (int i = 0; i < points2D.length; i++) {
+				points2D[i] = new Vector2(planePoints[i].y, planePoints[i].z);
+			}
+			a = collisionPoint.y;
+			b = collisionPoint.z;
+		} else {
+			for (int i = 0; i < points2D.length; i++) {
+				points2D[i] = new Vector2(planePoints[i].z, planePoints[i].x);
+			}
+			a = collisionPoint.z;
+			b = collisionPoint.x;
+		}
+		Vector2 collisionPoint2D = new Vector2(a, b);
+		
+		int intersections = 0;
+		for (int i = 0; i < points2D.length - 1; i++) {
+			if (pointAboveEdge(points2D[i], points2D[i + 1], collisionPoint2D)) {
+				intersections++;
+			}
+		}
+		if (pointAboveEdge(points2D[points2D.length - 1], points2D[0], collisionPoint2D)) {
+			intersections++;
+		}
+		
+		// An odd number of intersections means we're in the polygon (true) while an even number means we're outside (false)
+		return intersections % 2 == 1;
+	}
+	
+	private boolean pointAboveEdge(Vector2 pointA, Vector2 pointB, Vector2 point) {
+		if ((pointA.x < point.x && point.x < pointB.x) || (pointA.x > point.x && point.x > pointB.x)) {
+			// Find slope
+			double m = (pointB.y - pointA.y) / (pointB.x - pointA.x);
+			// Find Y-intercept
+			double b = pointA.y - m * pointA.x;
+			// Find Y value at the point we're checking
+			double yValueAtPoint = m * point.x + b;
+			
+			// Return true if the Y value of the point we're checking is greater than the Y value at the line
+			return point.y > yValueAtPoint;
+		}
+		return false;
 	}
 }
