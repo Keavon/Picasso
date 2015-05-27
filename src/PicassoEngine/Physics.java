@@ -148,9 +148,16 @@ public class Physics implements Runnable {
 		// Find and return 3D point of collision
 		Vector3 ballCenterToCollisionPoint = faceNormal.getScaled(-distanceToPlane);
 		Vector3 collisionPoint = ball.getSum(ballCenterToCollisionPoint);
-		
 		if (collisionOnFace(planePoints, collisionPoint)) {
 			return collisionPoint;
+		}
+		
+		// If there's no collision on a face, check each edge
+		for (int i = 0; i < planePoints.length; i++) {
+			Vector3 edgeCollisionPoint = edgeCollisionPoint(planePoints[i], planePoints[(i + 1) % planePoints.length], ball);
+			if (edgeCollisionPoint.getDifference(ball).getMagnitude() <= radius) {
+				return edgeCollisionPoint;
+			}
 		}
 		
 		return null;
@@ -208,8 +215,31 @@ public class Physics implements Runnable {
 			intersections++;
 		}
 		
-		// An odd number of intersections means we're in the polygon (true) while an even number means we're outside (false)
+		// An odd number of intersections means we're in the polygon while an even number means we're outside
 		return intersections % 2 == 1;
+	}
+	
+	public Vector3 edgeCollisionPoint(Vector3 pointA, Vector3 pointB, Vector3 ball) {
+		// Vector from A to P
+		Vector3 AP = pointA.getDifference(ball);
+		// Vector from A to B
+		Vector3 AB = pointA.getDifference(pointB);
+		
+		// Magnitude of AB vector (length squared)
+		double magnitudeAB = AB.getMagnitudeSquared();
+		// The dot product of A-to-P and A-to-B
+		double ABAPProduct = AP.getDotProduct(AB);
+		// The normalized "distance" from a to your closest point
+		double distance = ABAPProduct / magnitudeAB;
+		
+		// Check if P projection is over vectorAB
+		if (distance < 0) {
+			return pointA;
+		} else if (distance > 1) {
+			return pointB;
+		} else {
+			return pointA.getSum(AB.getScaled(distance));
+		}
 	}
 	
 	private boolean pointAboveEdge(Vector2 pointA, Vector2 pointB, Vector2 point) {

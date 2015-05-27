@@ -60,6 +60,9 @@ public class Vector3 {
 	public double getMagnitude() {
 		return Math.sqrt(x * x + y * y + z * z);
 	}
+	public double getMagnitudeSquared() {
+		return x * x + y * y + z * z;
+	}
 	
 	public double getAngleDifference(Vector3 other) {
 		return Math.acos(getDotProduct(other) / (getMagnitude() * other.getMagnitude()));
