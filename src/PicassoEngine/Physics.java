@@ -47,8 +47,7 @@ public class Physics implements Runnable {
 					
 					// Add collision to the total collision forces
 					Vector3 normalForce = collisionNormal.getScaled(Math.abs(item.getMass() * forcesBeforeCollision.getDotProduct(collisionNormal)));
-					//System.out.println(normalForce);
-					//collisionForces.add(normalForce);
+					collisionForces.add(normalForce);
 					
 					// Reflect velocity
 					Vector3 normalComponent = collisionNormal.getScaled(item.getVelocity().getDotProduct(collisionNormal));
@@ -63,7 +62,7 @@ public class Physics implements Runnable {
 					
 					// Move item to surface so it isn't penetrating the collider
 					// NOTE: this might cause bugs with multiple sources of collision and may violate the conservation of energy
-					item.addPosition(collisionNormal.getNormalized().getScaled(surfacePenetration));
+					//item.addPosition(collisionNormal.getNormalized().getScaled(surfacePenetration));
 				}
 			}
 			
@@ -73,14 +72,12 @@ public class Physics implements Runnable {
 			Vector3 forceSum = new Vector3();
 			forceSum.add(forcesBeforeCollision);
 			forceSum.add(collisionForces);
-			//System.out.println(forceSum);
 			
 			// Find acceleration from total forces
 			Vector3 acceleration = forceSum.getScaled(1.0 / item.getMass());
 			
 			// Find velocity from acceleration and mass, adding it to the velocity of the object
 			item.addVelocity(acceleration.getScaled(0.02 * item.getMass()));
-			//System.out.println(item.getVelocity().getMagnitude());
 			
 			// Displace rigidbodies with velocity
 			item.addPosition(item.getVelocity().getScaled(0.02));
@@ -141,7 +138,7 @@ public class Physics implements Runnable {
 		double distanceToPlane = faceNormal.x * ball.x + faceNormal.y * ball.y + faceNormal.z * ball.z + plane;
 		
 		// No collision if the collision distance is further than the ball's radius from the plane
-		if (distanceToPlane > radius) {
+		if (Math.abs(distanceToPlane) > radius) {
 			return null;
 		}
 		
