@@ -11,6 +11,9 @@ public class Renderer {
 	Graphics2D context;
 	private int FPS = 0;
 	private long lastShown = 0;
+	ArrayList<Vector3> debugLineStart = new ArrayList<Vector3>();
+	ArrayList<Vector3> debugLineEnd = new ArrayList<Vector3>();
+	ArrayList<String> debugLineColor = new ArrayList<String>();
 	
 	public Renderer(Frame frame) {
 		this.frame = frame;
@@ -167,6 +170,26 @@ public class Renderer {
 //			context.drawPolygon(x, y, x.length); // Draw wireframe outline
 //			context.drawOval((int) polygon.getProjectedCentroid().x, (int) polygon.getProjectedCentroid().y, 10, 10); // Draw centroid used in z-sorting
 		}
+		
+		// Draw debug lines
+		for (int i = 0; i < debugLineStart.size(); i++) {
+			Vector3 start = project(debugLineStart.get(i));
+			Vector3 end = project(debugLineEnd.get(i));
+			context.setColor(Color.decode("#" + debugLineColor.get(i)));
+			context.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
+		}
+	}
+	
+	public void addDebugLine(Vector3 start, Vector3 end, String color) {
+		debugLineStart.add(start);
+		debugLineEnd.add(end);
+		debugLineColor.add(color);
+	}
+	
+	public void clearDebugLines() {
+		debugLineStart.clear();
+		debugLineEnd.clear();
+		debugLineColor.clear();
 	}
 	
 	private Vector3 project(Vector3 point) {
