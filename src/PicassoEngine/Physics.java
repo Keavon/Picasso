@@ -29,8 +29,10 @@ public class Physics implements Runnable {
 		for (RigidBody item : rigidBodies) {
 			// Apply constant forces
 			Vector3 forcesBeforeCollision = new Vector3();
+			
 			// Scene forces (gravity)
 			forcesBeforeCollision.add(scene.getGravity());
+			
 			// Object forces
 			for (Vector3 force : item.getForces()) {
 				forcesBeforeCollision.add(force);
@@ -81,6 +83,10 @@ public class Physics implements Runnable {
 			
 			// Find velocity from acceleration and mass, adding it to the velocity of the object
 			item.addVelocity(acceleration.getScaled(0.02 * item.getMass()));
+			
+			// Apply impulse
+			item.addVelocity(item.getImpulse().getScaled(1 / (0.02 * item.getMass())));
+			item.resetImpulse();
 			
 			// Displace rigidbodies with velocity
 			item.addPosition(item.getVelocity().getScaled(0.02));

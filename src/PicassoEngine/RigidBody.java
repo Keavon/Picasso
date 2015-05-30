@@ -7,6 +7,7 @@ public class RigidBody extends Model {
 	private double mass = 1;
 	private Vector3 velocity;
 	private Vector3 angularVelocity;
+	private Vector3 impulse = new Vector3();
 	private ArrayList<Vector3> forces = new ArrayList<Vector3>();
 	
 	public RigidBody(String file) {
@@ -67,5 +68,21 @@ public class RigidBody extends Model {
 	
 	public void setRadius(double radius) {
 		this.radius = radius;
+	}
+	
+	public void setImpulse(Vector3 newImpulse) {
+		impulse = newImpulse;
+	}
+	
+	public void resetImpulse() {
+		impulse = new Vector3();
+	}
+	
+	public void addImpulse(Vector3 impulseToAdd) {
+		impulse.add(impulseToAdd);
+	}
+	
+	public Vector3 getImpulse() {
+		return impulse;
 	}
 }
