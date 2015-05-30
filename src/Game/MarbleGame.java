@@ -14,14 +14,14 @@ public class MarbleGame {
 		scene.setActiveCamera(camera);
 		
 		// Create model
-		Model plane = new Model("models/v.obj");
+		Model plane = new Model("models/scene.obj");
 		plane.setCollides(true);
-		plane.addScript(new Spin(plane));
+		//plane.addScript(new Spin(plane));
 		scene.addGameObject(plane);
 		
 		// Create ball
-		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(1, 4, 0));
-		ball.setVelocity(new Vector3(0, 0,0));
+		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(7, 5, 0));
+		ball.setVelocity(new Vector3(0, 0, 0));
 		scene.addGameObject(ball);
 	}
 }

@@ -55,14 +55,17 @@ public class Physics implements Runnable {
 					normalComponent.scale(-1);
 					
 					// Scale by bounciness of ball
-					normalComponent.scale(0.75);
+					normalComponent.scale(0.4);
+					if (normalComponent.getMagnitude() < 0.1) {
+						normalComponent.scale(0);
+					}
 					
 					// Set bounced velocity
 					item.setVelocity(normalComponent.getSum(tangentComponent));
 					
 					// Move item to surface so it isn't penetrating the collider
 					// NOTE: this might cause bugs with multiple sources of collision and may violate the conservation of energy
-					//item.addPosition(collisionNormal.getNormalized().getScaled(surfacePenetration));
+					item.addPosition(collisionNormal.getNormalized().getScaled(surfacePenetration));
 				}
 			}
 			
