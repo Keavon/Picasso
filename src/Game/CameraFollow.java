@@ -26,7 +26,6 @@ public class CameraFollow extends PicassoScript {
 			if (Input.GetKey("Left")) orbitAngle -= orbitSpeedKeys * Time.deltaTime;
 			if (Input.GetKey("Right")) orbitAngle += orbitSpeedKeys * Time.deltaTime;
 			
-			
 			// Camera view elevation
 			if (Input.GetKey("Mouse1")) elevationAngle += Input.mouseMovement.y * elevationSpeedMouse;
 			if (Input.GetKey("Up") && elevationAngle <= 179.99) elevationAngle += elevationSpeedKeys * Time.deltaTime;
@@ -51,7 +50,6 @@ public class CameraFollow extends PicassoScript {
 			Vector3 angleDifference = gameObject.getPosition().getDifference(target.getPosition());
 			gameObject.getRotation().y = Math.atan2(angleDifference.x, angleDifference.z);
 			gameObject.getRotation().x = -Math.asin(angleDifference.y / distance);
-			System.out.println(orbitAngle);
 		}
 	}
 	

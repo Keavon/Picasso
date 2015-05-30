@@ -46,6 +46,7 @@ public class Renderer {
 			Input.resetScrollRotation();
 			Input.resetMouseMovement();
 			this.frame.getCanvas().recenterMouse();
+			Input.resetKeysDown();
 			
 			// Render the camera view to the context
 			drawCameraView();
