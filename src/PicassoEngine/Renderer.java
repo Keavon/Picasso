@@ -84,6 +84,9 @@ public class Renderer {
 	
 	public void drawCameraView() {
 		camera = frame.getScene().getActiveCamera();
+		if (camera == null) {
+			return;
+		}
 		ArrayList<GameObject> objects = frame.getScene().getGameObjects();
 		ArrayList<Model> models = new ArrayList<Model>();
 		for (GameObject object : objects) {
