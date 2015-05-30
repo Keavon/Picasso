@@ -48,9 +48,11 @@ public class Renderer {
 			this.frame.getCanvas().recenterMouse();
 			Input.resetKeysDown();
 			
-			if(this.frame.getScene().activeSky != null)
-				this.frame.getScene().activeSky.drawBackground(context,camera);
-			context = frame.createGraphics();
+			// Draw skybox background
+			if (this.frame.getScene().activeSky != null) {
+				this.frame.getScene().activeSky.drawBackground(context, camera);
+			}
+			
 			// Render the camera view to the context
 			drawCameraView();
 			

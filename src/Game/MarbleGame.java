@@ -7,7 +7,7 @@ public class MarbleGame {
 		Frame frame = new Frame();
 		Scene scene = frame.getScene();
 		
-		SkyBox skybox = new SkyBox("skybox.png",frame);
+		SkyBox skybox = new SkyBox("assets/images/skybox.png", frame);
 		scene.setActiveSky(skybox);
 		// Create model
 		Model plane = new Model("models/scene.obj");

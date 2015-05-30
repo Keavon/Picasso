@@ -8,15 +8,18 @@ public class Scene {
 	private Renderer renderer;
 	private Camera activeCamera;
 	public SkyBox activeSky;
+	
 	public Scene(Frame frame) {
 		this.renderer = new Renderer(frame);
 		Physics physics = new Physics(this);
 		Thread physicsThread = new Thread(physics);
 		physicsThread.start();
 	}
-	public void setActiveSky(SkyBox s){
+	
+	public void setActiveSky(SkyBox s) {
 		this.activeSky = s;
 	}
+	
 	public void addGameObject(GameObject object) {
 		gameObjects.add(object);
 	}
