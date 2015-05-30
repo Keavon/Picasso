@@ -1,7 +1,6 @@
 package PicassoEngine;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -143,12 +142,13 @@ public class Physics implements Runnable {
 			}
 			collisionPoints.removeAll(duplicatesToRemove);
 		}
-
+		
 		// Return ArrayList of collision points as an array
 		Vector3[] result = new Vector3[collisionPoints.size()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = collisionPoints.get(i);
 		}
+		System.out.println();
 		return result;
 	}
 	
@@ -171,7 +171,7 @@ public class Physics implements Runnable {
 		// Find and return 3D point of collision
 		Vector3 ballCenterToCollisionPoint = faceNormal.getScaled(-distanceToPlane);
 		Vector3 collisionPoint = ball.getSum(ballCenterToCollisionPoint);
-		if (collisionOnFace(planePoints, collisionPoint)) {
+		if (isCollisionOnFace(planePoints, collisionPoint)) {
 			return collisionPoint;
 		}
 		
@@ -186,7 +186,7 @@ public class Physics implements Runnable {
 		return null;
 	}
 	
-	public boolean collisionOnFace(Vector3[] planePoints, Vector3 collisionPoint) {
+	public boolean isCollisionOnFace(Vector3[] planePoints, Vector3 collisionPoint) {
 		// Find area of polygon
 		double areaXY = 0;
 		double areaYZ = 0;
@@ -202,6 +202,11 @@ public class Physics implements Runnable {
 		areaXY += planePoints[planePoints.length - 1].x * planePoints[0].y - planePoints[0].x * planePoints[planePoints.length - 1].y;
 		areaYZ += planePoints[planePoints.length - 1].y * planePoints[0].z - planePoints[0].y * planePoints[planePoints.length - 1].z;
 		areaZX += planePoints[planePoints.length - 1].z * planePoints[0].x - planePoints[0].z * planePoints[planePoints.length - 1].x;
+		
+		// Make the areas positive values
+		areaXY = Math.abs(areaXY);
+		areaYZ = Math.abs(areaYZ);
+		areaZX = Math.abs(areaZX);
 		
 		// Project 3D plane into 2D
 		Vector2[] points2D = new Vector2[planePoints.length];
