@@ -20,19 +20,19 @@ public class Model extends GameObject {
 	private boolean trigger = false;
 	
 	public Model(String file) {
-		super(file);
-		loadObj(file);
-		findCentroids();
+		this(file, new Vector3(), new Vector3(), new Vector3(1, 1, 1));
 	}
 	
 	public Model(String file, Vector3 position) {
-		super(file, position);
-		loadObj(file);
-		findCentroids();
+		this(file, position, new Vector3(), new Vector3(1, 1, 1));
 	}
 	
 	public Model(String file, Vector3 position, Vector3 rotation) {
-		super(file, position);
+		this(file, position, rotation, new Vector3(1, 1, 1));
+	}
+	
+	public Model(String file, Vector3 position, Vector3 rotation, Vector3 scale) {
+		super(file, position, rotation, scale);
 		loadObj(file);
 		findCentroids();
 		setRotation(rotation);
@@ -82,6 +82,8 @@ public class Model extends GameObject {
 			transformedVertices[i].x = vertices[i].x * (Math.cos(super.getRotation().y) * Math.cos(super.getRotation().z)) + vertices[i].y * (Math.cos(super.getRotation().x) * Math.sin(super.getRotation().z) + Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z)) + vertices[i].z * (Math.sin(super.getRotation().x) * Math.sin(super.getRotation().z) - Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z));
 			transformedVertices[i].y = vertices[i].x * (-Math.cos(super.getRotation().y) * Math.sin(super.getRotation().z)) + vertices[i].y * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().z) - Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z)) + vertices[i].z * (Math.sin(super.getRotation().x) * Math.cos(super.getRotation().z) + Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z));
 			transformedVertices[i].z = vertices[i].x * (Math.sin(super.getRotation().y)) + vertices[i].y * (-Math.sin(super.getRotation().x) * Math.cos(super.getRotation().y)) + vertices[i].z * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().y));
+			
+			transformedVertices[i] = transformedVertices[i].getProduct(getScale());
 		}
 		
 		// Rotate face centroids
@@ -89,6 +91,8 @@ public class Model extends GameObject {
 			transformedFaceCenters[i].x = faceCenters[i].x * (Math.cos(super.getRotation().y) * Math.cos(super.getRotation().z)) + faceCenters[i].y * (Math.cos(super.getRotation().x) * Math.sin(super.getRotation().z) + Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z)) + faceCenters[i].z * (Math.sin(super.getRotation().x) * Math.sin(super.getRotation().z) - Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z));
 			transformedFaceCenters[i].y = faceCenters[i].x * (-Math.cos(super.getRotation().y) * Math.sin(super.getRotation().z)) + faceCenters[i].y * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().z) - Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z)) + faceCenters[i].z * (Math.sin(super.getRotation().x) * Math.cos(super.getRotation().z) + Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z));
 			transformedFaceCenters[i].z = faceCenters[i].x * (Math.sin(super.getRotation().y)) + faceCenters[i].y * (-Math.sin(super.getRotation().x) * Math.cos(super.getRotation().y)) + faceCenters[i].z * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().y));
+			
+			transformedFaceCenters[i] = transformedFaceCenters[i].getProduct(super.getScale());
 		}
 	}
 	

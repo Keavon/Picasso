@@ -3,7 +3,7 @@ package Game;
 import PicassoEngine.*;
 
 public class CameraFollow extends PicassoScript {
-	private double distance = 10;
+	private double distance = 3.5;
 	private GameObject target;
 	
 	private double orbitAngle;

@@ -16,7 +16,7 @@ public class MarbleGame {
 		scene.addGameObject(plane);
 		
 		// Create ball
-		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(7, 5, 0));
+		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(7, 5, 0), new Vector3(), new Vector3(0.25, 0.25, 0.25));
 		ball.setVelocity(new Vector3(0, 0, 0));
 		scene.addGameObject(ball);
 		

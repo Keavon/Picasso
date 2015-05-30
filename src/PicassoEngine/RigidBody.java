@@ -22,6 +22,11 @@ public class RigidBody extends Model {
 		super(file, position, rotation);
 	}
 	
+	public RigidBody(String file, Vector3 position, Vector3 rotation, Vector3 scale) {
+		super(file, position, rotation, scale);
+		radius = (scale.x + scale.y + scale.z) / 3;
+	}
+	
 	public Vector3 getAngularVelocity() {
 		return angularVelocity;
 	}
