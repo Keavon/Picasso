@@ -7,7 +7,7 @@ public class CameraFollow extends PicassoScript {
 	private GameObject target;
 	
 	private double orbitAngle;
-	private double elevationAngle;
+	private double elevationAngle = 120;
 	
 	double orbitSpeedKeys = 100;
 	double elevationSpeedKeys = 100;
@@ -28,11 +28,11 @@ public class CameraFollow extends PicassoScript {
 			
 			// Camera view elevation
 			if (Input.GetKey("Mouse1")) elevationAngle += Input.mouseMovement.y * elevationSpeedMouse;
-			if (Input.GetKey("Up") && elevationAngle <= 179.99) elevationAngle += elevationSpeedKeys * Time.deltaTime;
+			if (Input.GetKey("Up") && elevationAngle <= 179.9) elevationAngle += elevationSpeedKeys * Time.deltaTime;
 			if (Input.GetKey("Down") && elevationAngle >= 90) elevationAngle -= elevationSpeedKeys * Time.deltaTime;
 			
 			// Clamp angles
-			if (elevationAngle > 179.99) elevationAngle = 179.99;
+			if (elevationAngle > 179.9) elevationAngle = 179.9;
 			else if (elevationAngle < 90) elevationAngle = 90;
 			
 			// Scroll wheel camera zoom
