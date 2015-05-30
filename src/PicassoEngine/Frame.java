@@ -16,8 +16,8 @@ public class Frame {
 		scene = new Scene(this);
 		canvas = new Canvas(this);
 		frame.add(canvas);
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		frame.setUndecorated(true);
+//		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//		frame.setUndecorated(true);
 		frame.setVisible(true);
 		
 		// Hide cursor

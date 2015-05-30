@@ -84,6 +84,12 @@ public class Vector3 {
 		return new Vector3(x, y, z);
 	}
 	
+	public void set(Vector3 newVector) {
+		this.x = newVector.x;
+		this.y = newVector.y;
+		this.z = newVector.z;
+	}
+	
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";
 	}
