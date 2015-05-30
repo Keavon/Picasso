@@ -7,14 +7,16 @@ public class Scene {
 	private Vector3 gravity = new Vector3(0, -9.8, 0);
 	private Renderer renderer;
 	private Camera activeCamera;
-	
+	public SkyBox activeSky;
 	public Scene(Frame frame) {
 		this.renderer = new Renderer(frame);
 		Physics physics = new Physics(this);
 		Thread physicsThread = new Thread(physics);
 		physicsThread.start();
 	}
-	
+	public void setActiveSky(SkyBox s){
+		this.activeSky = s;
+	}
 	public void addGameObject(GameObject object) {
 		gameObjects.add(object);
 	}

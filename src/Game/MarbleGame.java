@@ -7,7 +7,8 @@ public class MarbleGame {
 		Frame frame = new Frame();
 		Scene scene = frame.getScene();
 		
-		
+		SkyBox skybox = new SkyBox("skybox.png",frame);
+		scene.setActiveSky(skybox);
 		// Create model
 		Model plane = new Model("models/scene.obj");
 		plane.setCollides(true);

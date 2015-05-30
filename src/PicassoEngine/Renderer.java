@@ -48,6 +48,9 @@ public class Renderer {
 			this.frame.getCanvas().recenterMouse();
 			Input.resetKeysDown();
 			
+			if(this.frame.getScene().activeSky != null)
+				this.frame.getScene().activeSky.drawBackground(context,camera);
+			context = frame.createGraphics();
 			// Render the camera view to the context
 			drawCameraView();
 			
@@ -118,7 +121,9 @@ public class Renderer {
 			
 			// Project vertices and put them in a corresponding screen space array
 			for (int vertex = 0; vertex < vertices.length; vertex++) {
+				
 				projectedVertices[vertex] = project(vertices[vertex]);
+				
 			}
 			
 			// Add all the vertices in all the faces in this model to a polygons ArrayList
