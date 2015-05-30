@@ -29,6 +29,9 @@ public class BallMovement extends PicassoScript {
 		if (Input.GetKey("D")) {
 			force.add(new Vector3(Math.cos((angle - 90) * Math.PI / 180), 0, Math.sin((angle - 90) * Math.PI / 180)));
 		}
+		if (Input.getKeyDown("Space")) {
+			((RigidBody) gameObject).addImpulse(new Vector3(0, 0.25, 0));
+		}
 		movementForce.set(force.getScaled(5));
 	}
 }
