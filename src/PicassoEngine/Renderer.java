@@ -42,9 +42,10 @@ public class Renderer {
 			// LateUpdate - Run additional game logic
 			this.frame.getScene().callLateUpdate();
 			
-			// Reset mouse position
+			// Reset mouse position and scroll rotation
+			Input.resetScrollRotation();
 			Input.resetMouseMovement();
-			this.frame.getCanvas().getMouseListener().recenterMouse();
+			this.frame.getCanvas().recenterMouse();
 			
 			// Render the camera view to the context
 			drawCameraView();
@@ -211,7 +212,6 @@ public class Renderer {
 		double ez = 1 / Math.tan(camera.getFov() / 2);
 		double x = (screenPoint.x - .5) * (ez / screenPoint.z) / aspectRatio;
 		double y = -(screenPoint.y - .5) * (ez / screenPoint.z);
-		
 		
 		newPoint.x = (int) (x * frame.getFrame().getWidth() + frame.getFrame().getWidth() / 2);
 		newPoint.y = (int) (y * frame.getFrame().getHeight() + frame.getFrame().getHeight() / 2);

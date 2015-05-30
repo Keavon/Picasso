@@ -8,10 +8,14 @@ public class Canvas extends JPanel {
 	private MouseInput mouseListener;
 	
 	public Canvas(Frame frame) {
-		this.frame = frame;
-		KeyInput keyListener = new KeyInput();
+		// Add input listeners
 		mouseListener = new MouseInput(frame.getFrame());
-		addKeyListener(keyListener);
+		new KeyInput(this);
+		new MouseWheelInput(frame.getFrame());
+		new MouseClickInput(frame.getFrame());
+		
+		// Set up the frame
+		this.frame = frame;
 		setFocusable(true);
 		repaint();
 	}
@@ -20,9 +24,7 @@ public class Canvas extends JPanel {
 		frame.getScene().getRenderer().render(graphics);
 	}
 	
-	// maybe it stutters because multiple repaint loops are being run at once
-	
-	public MouseInput getMouseListener() {
-		return mouseListener;
+	public void recenterMouse() {
+		mouseListener.recenterMouse();
 	}
 }

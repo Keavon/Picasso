@@ -7,11 +7,6 @@ public class MarbleGame {
 		Frame frame = new Frame();
 		Scene scene = frame.getScene();
 		
-		// Create camera
-		Camera camera = new Camera(new Vector3(0, 3, -15));
-		camera.addScript(new FirstPersonCamera(camera));
-		scene.addGameObject(camera);
-		scene.setActiveCamera(camera);
 		
 		// Create model
 		Model plane = new Model("models/scene.obj");
@@ -23,5 +18,15 @@ public class MarbleGame {
 		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(7, 5, 0));
 		ball.setVelocity(new Vector3(0, 0, 0));
 		scene.addGameObject(ball);
+		
+		// Create camera
+		Camera camera = new Camera(new Vector3(0, 3, -15));
+		CameraFollow cameraFollow = new CameraFollow(camera, ball);
+		camera.addScript(cameraFollow);
+		scene.addGameObject(camera);
+		scene.setActiveCamera(camera);
+		
+		// Add ball movement script
+		ball.addScript(new BallMovement(ball, cameraFollow));
 	}
 }

@@ -35,7 +35,10 @@ public class MouseInput implements MouseMotionListener {
 		}
 	}
 	
-	public void mouseDragged(MouseEvent arg0) {
+	public void mouseDragged(MouseEvent e) {
+		Input.addMouseMovement(new Vector2(e.getX() - oldMouseX, e.getY() - oldMouseY));
+		oldMouseX = e.getX();
+		oldMouseY = e.getY();
 	}
 	
 	public void mouseMoved(MouseEvent e) {

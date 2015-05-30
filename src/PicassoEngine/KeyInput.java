@@ -4,6 +4,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyInput implements KeyListener {
+	public KeyInput(Canvas canvas) {
+		canvas.addKeyListener(this);
+	}
+	
 	public void keyTyped(KeyEvent e) {
 	}
 	
