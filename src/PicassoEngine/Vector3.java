@@ -90,6 +90,19 @@ public class Vector3 {
 		this.z = newVector.z;
 	}
 	
+	public boolean isDuplicate(Vector3 other) {
+		if (Math.abs(this.x - other.x) > 0.001) {
+			return false;
+		}
+		if (Math.abs(this.y - other.y) > 0.001) {
+			return false;
+		}
+		if (Math.abs(this.z - other.z) > 0.001) {
+			return false;
+		}
+		return true;
+	}
+	
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";
 	}

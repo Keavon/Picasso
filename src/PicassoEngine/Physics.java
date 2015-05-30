@@ -1,6 +1,7 @@
 package PicassoEngine;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -124,9 +125,25 @@ public class Physics implements Runnable {
 			}
 			
 			// Find any collisions on the face
-			collisionPoints.add(planeCollision(orderedVertices, ball, radius));
+			Vector3 collisionPoint = faceCollision(orderedVertices, ball, radius);
+			if (collisionPoint != null) {
+				collisionPoints.add(collisionPoint);
+			}
 		}
 		
+		// Remove duplicate collision points
+		if (collisionPoints.size() > 1) {
+			ArrayList<Vector3> duplicatesToRemove = new ArrayList<Vector3>();
+			for (int i = 0; i < collisionPoints.size() - 1; i++) {
+				for (int j = i + 1; j < collisionPoints.size(); j++) {
+					if (collisionPoints.get(i).isDuplicate(collisionPoints.get(j))) {
+						duplicatesToRemove.add(collisionPoints.get(j));
+					}
+				}
+			}
+			collisionPoints.removeAll(duplicatesToRemove);
+		}
+
 		// Return ArrayList of collision points as an array
 		Vector3[] result = new Vector3[collisionPoints.size()];
 		for (int i = 0; i < result.length; i++) {
@@ -135,7 +152,7 @@ public class Physics implements Runnable {
 		return result;
 	}
 	
-	private Vector3 planeCollision(Vector3[] planePoints, Vector3 ball, double radius) {
+	private Vector3 faceCollision(Vector3[] planePoints, Vector3 ball, double radius) {
 		// Find unit vector normal to the face
 		Vector3 v1 = planePoints[2].getDifference(planePoints[1]);
 		Vector3 v2 = planePoints[0].getDifference(planePoints[1]);
