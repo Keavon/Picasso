@@ -209,10 +209,10 @@ public class Renderer {
 		
 		Vector3 screenPoint = new Vector3();
 		
-		screenPoint.x = Math.cos(camera.getRotation().y) * (Math.sin(camera.getRotation().z) * (point3d.y - camera.getPosition().y) + Math.cos(camera.getRotation().z) * (point3d.x - camera.getPosition().x)) - Math.sin(camera.getRotation().y) * (point3d.z - camera.getPosition().z);
+		screenPoint.x = Math.cos(camera.getRotation().y) * (Math.sin(camera.getRotation().z) * (point3d.y - camera.getPosition().y) + Math.cos(camera.getRotation().z) * (point3d.x - camera.getPosition().x)) - Math.sin(camera.getRotation().y) * (point3d.z - camera.getPosition().z) + 0.5;
 		
 		screenPoint.y = Math.sin(camera.getRotation().x) * (Math.cos(camera.getRotation().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().y) * (Math.sin(camera.getRotation().z) * (point3d.y - camera.getPosition().y) +
-				Math.cos(camera.getRotation().z) * (point3d.x - camera.getPosition().x))) + Math.cos(camera.getRotation().x) * (Math.cos(camera.getRotation().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().z) * (point3d.x - camera.getPosition().x));
+				Math.cos(camera.getRotation().z) * (point3d.x - camera.getPosition().x))) + Math.cos(camera.getRotation().x) * (Math.cos(camera.getRotation().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().z) * (point3d.x - camera.getPosition().x)) + 0.5;
 		
 		screenPoint.z = Math.cos(camera.getRotation().x) * (Math.cos(camera.getRotation().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().y) * (Math.sin(camera.getRotation().z) * (point3d.y - camera.getPosition().y) +
 				Math.cos(camera.getRotation().z) * (point3d.x - camera.getPosition().x))) - Math.sin(camera.getRotation().x) * (Math.cos(camera.getRotation().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().z) * (point3d.x - camera.getPosition().x));
