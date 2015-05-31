@@ -10,14 +10,12 @@ public class MarbleGame {
 		SkyBox skybox = new SkyBox("assets/images/skybox.png", frame);
 		scene.setActiveSky(skybox);
 		// Create model
-		Model plane = new Model("models/scene.obj");
-		plane.setCollides(true);
-		//plane.addScript(new Spin(plane));
-		scene.addGameObject(plane);
+		Model track = new Model("models/scene.obj");
+		track.setCollides(true);
+		scene.addGameObject(track);
 		
 		// Create ball
 		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(7, 5, 0), new Vector3(), new Vector3(0.25, 0.25, 0.25));
-		ball.setVelocity(new Vector3(0, 0, 0));
 		scene.addGameObject(ball);
 		
 		// Create camera

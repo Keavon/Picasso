@@ -18,6 +18,8 @@ public class Model extends GameObject {
 	private boolean collides = false;
 	// Says whether or not this object is a trigger region
 	private boolean trigger = false;
+	// Order to paint where the higher value is painted later (on top)
+	private int paintOrder = 0;
 	
 	public Model(String file) {
 		this(file, new Vector3(), new Vector3(), new Vector3(1, 1, 1));
@@ -29,6 +31,14 @@ public class Model extends GameObject {
 	
 	public Model(String file, Vector3 position, Vector3 rotation) {
 		this(file, position, rotation, new Vector3(1, 1, 1));
+	}
+	
+	public int getPaintOrder() {
+		return paintOrder;
+	}
+	
+	public void setPaintOrder(int paintOrder) {
+		this.paintOrder = paintOrder;
 	}
 	
 	public Model(String file, Vector3 position, Vector3 rotation, Vector3 scale) {
@@ -165,7 +175,7 @@ public class Model extends GameObject {
 			}
 		} catch (IOException e) {
 			// Catch error reading file and print the error message
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
 		}
 	}
 	
@@ -270,13 +280,6 @@ public class Model extends GameObject {
 	}
 	
 	public String toString() {
-		String string = "";
-		for (Face face : faces) {
-			for (int p = 0; p < face.getVertexIndexes().length; p++) {
-				string += vertices[face.getVertexIndexes()[p]] + ", ";
-			}
-			string += "#" + face.getColor() + "\n";
-		}
-		return string;
+		return getName();
 	}
 }

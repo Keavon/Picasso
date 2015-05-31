@@ -88,99 +88,127 @@ public class Renderer {
 	}
 	
 	public void drawCameraView() {
+		// Get the camera
 		camera = frame.getScene().getActiveCamera();
 		if (camera == null) {
 			return;
 		}
+		
+		// Collect the models to render
 		ArrayList<GameObject> objects = frame.getScene().getGameObjects();
-		ArrayList<Model> models = new ArrayList<Model>();
+		ArrayList<Model> allModels = new ArrayList<Model>();
 		for (GameObject object : objects) {
 			if (object instanceof Model) {
-				models.add((Model) object);
+				allModels.add((Model) object);
 			}
 		}
 		
-		// All the polygons in all the models
-		int totalFaces = 0;
-		for (Model model : models) {
-			totalFaces += model.getFaces().length;
-		}
-		ArrayList<Polygon2D> polygons = new ArrayList<Polygon2D>(totalFaces);
-		int polygonIndex = 0;
-		
-		// Add every face in every model to the list of polygons
-		for (Model model : models) {
-			// Faces
-			Face[] faces = model.getFaces();
-			
-			// Vertices
-			Vector3[] vertices = model.getVertices();
-			Vector3[] projectedVertices = new Vector3[vertices.length];
-			
-			// PicassoEngine.Face centers
-			Vector3[] centroids = model.getFaceCenters();
-			double[] centroidDepths = new double[centroids.length];
-			
-			// Project vertices and put them in a corresponding screen space array
-			for (int vertex = 0; vertex < vertices.length; vertex++) {
-				
-				projectedVertices[vertex] = project(vertices[vertex]);
-				
-			}
-			
-			// Add all the vertices in all the faces in this model to a polygons ArrayList
-			for (int face = 0; face < faces.length; face++) {
-				boolean onScreen = false;
-				int[] vertexIndexes = faces[face].getVertexIndexes();
-				Vector2[] faceVertices = new Vector2[vertexIndexes.length];
-				
-				for (int i = 0; i < vertexIndexes.length; i++) {
-					// Add the projected vertex as a screen point in the 2D screen face
-					faceVertices[i] = new Vector2(projectedVertices[vertexIndexes[i]].x, projectedVertices[vertexIndexes[i]].y);
-					
-					// Check if it's on screen
-					if (faceVertices[i].x > 0 && faceVertices[i].x < frame.getFrame().getWidth() && faceVertices[i].y > 0 && faceVertices[i].y < frame.getFrame().getHeight() && projectedVertices[vertexIndexes[i]].z > 0) {
-						onScreen = true;
-					}
-				}
-				
-				if (onScreen) {
-					// Add this face as a polygon in the final array
-					Vector3 v1 = vertices[vertexIndexes[0]].getDifference(vertices[vertexIndexes[1]]);
-					Vector3 v2 = vertices[vertexIndexes[2]].getDifference(vertices[vertexIndexes[1]]);
-					double brightness = v1.getCrossProduct(v2).getAngleDifference(new Vector3(5, 10, 0)) / Math.PI;
-					polygons.add(new Polygon2D(faceVertices, project(centroids[face]), faces[face].getColor(), brightness));
-				}
-			}
-		}
-		
-		Collections.sort(polygons, new Comparator<Polygon2D>() {
-			public int compare(Polygon2D p1, Polygon2D p2) {
-				if (p1.getProjectedCentroid().z > p2.getProjectedCentroid().z) {
-					return -1;
-				} else if (p1.getProjectedCentroid().z < p2.getProjectedCentroid().z) {
+		// Order models by paint order
+		Collections.sort(allModels, new Comparator<Model>() {
+			public int compare(Model m1, Model m2) {
+				if (m1.getPaintOrder() > m2.getPaintOrder()) {
 					return 1;
+				} else if (m1.getPaintOrder() < m2.getPaintOrder()) {
+					return -1;
 				} else {
 					return 0;
 				}
 			}
 		});
 		
-		// Draw each polygon
-		for (Polygon2D polygon : polygons) {
-			int[] x = new int[polygon.getPoints().length];
-			int[] y = new int[x.length];
+		int currentModelIndex = 0;
+		while (currentModelIndex < allModels.size()) {
+			int currentPaintOrder = allModels.get(currentModelIndex).getPaintOrder();
 			
-			for (int point = 0; point < x.length; point++) {
-				x[point] = Math.round((float) polygon.getPoints()[point].x);
-				y[point] = Math.round((float) polygon.getPoints()[point].y);
+			// Fill the list of models with the same paint order
+			ArrayList<Model> models = new ArrayList<Model>();
+			while (currentModelIndex < allModels.size() && allModels.get(currentModelIndex).getPaintOrder() == currentPaintOrder) {
+				models.add(allModels.get(currentModelIndex));
+				currentModelIndex++;
 			}
 			
-			context.setColor(Color.decode("#" + polygon.getColor()));
-			context.fillPolygon(x, y, x.length);
+			// All the polygons in all the models
+			int totalFaces = 0;
+			for (Model model : models) {
+				totalFaces += model.getFaces().length;
+			}
+			ArrayList<Polygon2D> polygons = new ArrayList<Polygon2D>(totalFaces);
+			int polygonIndex = 0;
+			
+			// Add every face in every model to the list of polygons
+			for (Model model : models) {
+				// Faces
+				Face[] faces = model.getFaces();
+				
+				// Vertices
+				Vector3[] vertices = model.getVertices();
+				Vector3[] projectedVertices = new Vector3[vertices.length];
+				
+				// PicassoEngine.Face centers
+				Vector3[] centroids = model.getFaceCenters();
+				double[] centroidDepths = new double[centroids.length];
+				
+				// Project vertices and put them in a corresponding screen space array
+				for (int vertex = 0; vertex < vertices.length; vertex++) {
+					
+					projectedVertices[vertex] = project(vertices[vertex]);
+					
+				}
+				
+				// Add all the vertices in all the faces in this model to a polygons ArrayList
+				for (int face = 0; face < faces.length; face++) {
+					boolean onScreen = false;
+					int[] vertexIndexes = faces[face].getVertexIndexes();
+					Vector2[] faceVertices = new Vector2[vertexIndexes.length];
+					
+					for (int i = 0; i < vertexIndexes.length; i++) {
+						// Add the projected vertex as a screen point in the 2D screen face
+						faceVertices[i] = new Vector2(projectedVertices[vertexIndexes[i]].x, projectedVertices[vertexIndexes[i]].y);
+						
+						// Check if it's on screen
+						if (faceVertices[i].x > 0 && faceVertices[i].x < frame.getFrame().getWidth() && faceVertices[i].y > 0 && faceVertices[i].y < frame.getFrame().getHeight() && projectedVertices[vertexIndexes[i]].z > 0) {
+							onScreen = true;
+						}
+					}
+					
+					if (onScreen) {
+						// Add this face as a polygon in the final array
+						Vector3 v1 = vertices[vertexIndexes[0]].getDifference(vertices[vertexIndexes[1]]);
+						Vector3 v2 = vertices[vertexIndexes[2]].getDifference(vertices[vertexIndexes[1]]);
+						double brightness = v1.getCrossProduct(v2).getAngleDifference(new Vector3(5, 10, 0)) / Math.PI;
+						polygons.add(new Polygon2D(faceVertices, project(centroids[face]), faces[face].getColor(), brightness));
+					}
+				}
+			}
+			
+			Collections.sort(polygons, new Comparator<Polygon2D>() {
+				public int compare(Polygon2D p1, Polygon2D p2) {
+					if (p1.getProjectedCentroid().z > p2.getProjectedCentroid().z) {
+						return -1;
+					} else if (p1.getProjectedCentroid().z < p2.getProjectedCentroid().z) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			});
+			
+			// Draw each polygon
+			for (Polygon2D polygon : polygons) {
+				int[] x = new int[polygon.getPoints().length];
+				int[] y = new int[x.length];
+				
+				for (int point = 0; point < x.length; point++) {
+					x[point] = Math.round((float) polygon.getPoints()[point].x);
+					y[point] = Math.round((float) polygon.getPoints()[point].y);
+				}
+				
+				context.setColor(Color.decode("#" + polygon.getColor()));
+				context.fillPolygon(x, y, x.length);
 //			context.setColor(Color.black); // Set color to black for the below options
 //			context.drawPolygon(x, y, x.length); // Draw wireframe outline
 //			context.drawOval((int) polygon.getProjectedCentroid().x, (int) polygon.getProjectedCentroid().y, 10, 10); // Draw centroid used in z-sorting
+			}
 		}
 		
 		// Draw debug lines

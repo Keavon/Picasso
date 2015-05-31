@@ -148,7 +148,6 @@ public class Physics implements Runnable {
 		for (int i = 0; i < result.length; i++) {
 			result[i] = collisionPoints.get(i);
 		}
-		System.out.println();
 		return result;
 	}
 	

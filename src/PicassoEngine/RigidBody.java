@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class RigidBody extends Model {
 	private double radius = 1;
 	private double mass = 1;
-	private Vector3 velocity;
-	private Vector3 angularVelocity;
+	private Vector3 velocity = new Vector3();
+	private Vector3 angularVelocity = new Vector3();
 	private Vector3 impulse = new Vector3();
 	private ArrayList<Vector3> forces = new ArrayList<Vector3>();
 	
