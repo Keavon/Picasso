@@ -12,10 +12,26 @@ public class KeyInput implements KeyListener {
 	}
 	
 	public void keyPressed(KeyEvent e) {
-		Input.setKeyDown(KeyEvent.getKeyText(e.getKeyCode()));
+		if(e.getKeyCode() == KeyEvent.VK_SPACE)Input.setKeyDown("Space");
+		else if(e.getKeyCode() == KeyEvent.VK_LEFT)Input.setKeyDown("Left");
+		else if(e.getKeyCode() == KeyEvent.VK_RIGHT)Input.setKeyDown("Right");
+		else if(e.getKeyCode() == KeyEvent.VK_UP)Input.setKeyDown("Up");
+		else if(e.getKeyCode() == KeyEvent.VK_DOWN)Input.setKeyDown("Down");
+		else{
+			Input.setKeyDown(KeyEvent.getKeyText(e.getKeyCode()));
+		}
+	
+		
 	}
 	
 	public void keyReleased(KeyEvent e) {
-		Input.setKeyUp(KeyEvent.getKeyText(e.getKeyCode()));
+		if(e.getKeyCode() == KeyEvent.VK_SPACE)Input.setKeyUp("Space");
+		else if(e.getKeyCode() == KeyEvent.VK_LEFT)Input.setKeyUp("Left");
+		else if(e.getKeyCode() == KeyEvent.VK_RIGHT)Input.setKeyUp("Right");
+		else if(e.getKeyCode() == KeyEvent.VK_UP)Input.setKeyUp("Up");
+		else if(e.getKeyCode() == KeyEvent.VK_DOWN)Input.setKeyUp("Down");
+		else{
+			Input.setKeyUp(KeyEvent.getKeyText(e.getKeyCode()));
+		}
 	}
 }

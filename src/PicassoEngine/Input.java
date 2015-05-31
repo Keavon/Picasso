@@ -10,7 +10,8 @@ public class Input {
 	private static int mouseScrollRotation = 0;
 	
 	public static boolean GetKey(String keyCode) {
-		return keys.getOrDefault(keyCode, false);
+		boolean keyPushed = keys.getOrDefault(keyCode, false);
+		return keyPushed;
 	}
 	
 	public static void setKeyDown(String keyCode) {
@@ -24,7 +25,11 @@ public class Input {
 	}
 	
 	public static boolean getKeyDown(String keyCode) {
-		return keysDown.getOrDefault(keyCode, false);
+		boolean keyPushed = keysDown.getOrDefault(keyCode, false);
+		if (!keyPushed && keyCode.equals("Space")) {
+			keyPushed = keysDown.getOrDefault(" ", false);
+		}
+		return keyPushed;
 	}
 	
 	public static void resetKeysDown() {
