@@ -37,8 +37,8 @@ public class CameraFollow extends PicassoScript {
 			
 			// Scroll wheel camera zoom
 			distance += Input.getMouseScrollRotation() * 0.25;
-			if (distance < 3) distance = 3;
-			else if (distance > 20) distance = 20;
+			if (distance < 2) distance = 2;
+			else if (distance > 7.5) distance = 7.5;
 			
 			// Set positions
 			double xCord = distance * Math.sin(elevationAngle * Math.PI / 180) * Math.cos(orbitAngle * Math.PI / 180);
