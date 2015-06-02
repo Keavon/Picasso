@@ -2,13 +2,21 @@ package Game.Scenes;
 
 import Game.Scripts.BallMovement;
 import Game.Scripts.CameraFollow;
-import Game.Scripts.GameUI;
+import Game.Scripts.SpinningGoal;
 import PicassoEngine.*;
+import sun.audio.AudioData;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+import sun.audio.ContinuousAudioDataStream;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class level1 extends Scene {
-	public void Load() {
-		// Play game in fullscreen
-		Application.fullscreen(true);
+	public void Load(PicassoEngine engine) {
+		// Play game in goFullscreen
+		Application.goFullscreen();
 		
 		// Hide mouse cursor
 		Application.hideCursor();
@@ -16,18 +24,14 @@ public class level1 extends Scene {
 		// Start physics running
 		startPhysics();
 		
-		addGUIElement(new GUIElement(0, "images/GUI/powerup.png", 0, 0));
-		addGUIElement(new GUIElement(1, "images/GUI/rocket_powerup.png", 0, 0));
-		
 		// Add sky
 		setSky(new Sky("assets/images/skybox.png"));
 		
 		// Add ball
-		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(7, 5, 0), new Vector3(), new Vector3(0.25, 0.25, 0.25));
+		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(0, 1, 0), new Vector3(), new Vector3(0.25, 0.25, 0.25));
 		
 		// Add camera
-		Camera camera = new Camera(new Vector3(0, 3, -15));
-		camera.addScript(new GameUI(camera));
+		Camera camera = new Camera(new Vector3());
 		addGameObject(camera);
 		setActiveCamera(camera);
 		
@@ -36,12 +40,32 @@ public class level1 extends Scene {
 		camera.addScript(cameraFollow);
 		
 		// Add scripts to ball
-		ball.addScript(new BallMovement(ball, cameraFollow));
+		BallMovement ballMovement = new BallMovement(ball, cameraFollow, this, engine, 1);
+		ball.addScript(ballMovement);
 		addGameObject(ball);
 		
 		// Add world
-		Model track = new Model("models/scene.obj");
-		track.setCollides(true);
+		Model track = new Model("models/level parts/level1.obj");
 		addGameObject(track);
+		
+		// Add world's simplified collider
+		Model trackCollider = new Model("models/level parts/level1_collider.obj");
+		trackCollider.setCollides(true);
+		trackCollider.setVisible(false);
+		addGameObject(trackCollider);
+		
+		Model goal = new Model("models/level parts/goal.obj", new Vector3(7.5, 2.5, -18));
+		goal.addScript(new SpinningGoal(goal));
+		goal.setCollides(true);
+		addGameObject(goal);
+		
+		ballMovement.setGoal(goal);
+		
+		// Play music
+		try {
+			AudioPlayer.player.start(new AudioStream(new FileInputStream("assets/WildWaters.wav")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

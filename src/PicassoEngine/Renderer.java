@@ -1,20 +1,13 @@
 package PicassoEngine;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.awt.image.VolatileImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class Renderer {
 	private PicassoEngine engine;
 	private Camera camera;
 	Graphics2D context;
-	private int FPS = 0;
-	private long lastShown = 0;
 	ArrayList<Vector3> debugLineStart = new ArrayList<Vector3>();
 	ArrayList<Vector3> debugLineEnd = new ArrayList<Vector3>();
 	ArrayList<String> debugLineColor = new ArrayList<String>();
@@ -37,7 +30,7 @@ public class Renderer {
 		// LateUpdate - Run additional game logic
 		engine.getScene().callLateUpdate();
 		
-		// Reset mouse position and scroll rotation
+		// Reset input states
 		Input.resetScrollRotation();
 		Input.resetMouseMovement();
 		engine.getCanvas().recenterMouse();
@@ -63,7 +56,7 @@ public class Renderer {
 		// Slow down if frames are rendering too fast
 		if ((System.nanoTime() - lastLoopTime) / 1000000000.0 < 0.016) {
 			try {
-				Thread.sleep(15 - (System.nanoTime() - lastLoopTime) / 1000000);
+				Thread.sleep(Math.max(15 - (System.nanoTime() - lastLoopTime) / 1000000, 1));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -71,17 +64,6 @@ public class Renderer {
 		
 		// Set deltaTime as the length of time in seconds that this frame took
 		Time.deltaTime = (System.nanoTime() - lastLoopTime) / 1000000000.0;
-		
-		// Log FPS
-		FPS++;
-		if (lastShown == 0) {
-			lastShown = System.nanoTime();
-		}
-		if (System.nanoTime() - lastShown >= 1000000000) {
-			//System.out.println(FPS);
-			lastShown = System.nanoTime();
-			FPS = 0;
-		}
 	}
 	
 	public void drawCameraView() {
@@ -95,7 +77,7 @@ public class Renderer {
 		ArrayList<GameObject> objects = engine.getScene().getGameObjects();
 		ArrayList<Model> allModels = new ArrayList<Model>();
 		for (GameObject object : objects) {
-			if (object instanceof Model) {
+			if (object instanceof Model && ((Model) object).isVisible()) {
 				allModels.add((Model) object);
 			}
 		}
@@ -200,9 +182,9 @@ public class Renderer {
 				
 				context.setColor(Color.decode("#" + polygon.getColor()));
 				context.fillPolygon(x, y, x.length);
-//			context.setColor(Color.black); // Set color to black for the below options
-//			context.drawPolygon(x, y, x.length); // Draw wireframe outline
-//			context.drawOval((int) polygon.getProjectedCentroid().x, (int) polygon.getProjectedCentroid().y, 10, 10); // Draw centroid used in z-sorting
+//		    	context.setColor(Color.black); // Set color to black for the below options
+//		    	context.drawPolygon(x, y, x.length); // Draw wireframe outline
+//		    	context.drawOval((int) polygon.getProjectedCentroid().x, (int) polygon.getProjectedCentroid().y, 10, 10); // Draw centroid used in z-sorting
 			}
 		}
 		
@@ -216,6 +198,7 @@ public class Renderer {
 	}
 	
 	public void drawGUIElements() {
+		// Sort elements by depth
 		Collections.sort(engine.getScene().getGuiElements(), new Comparator<GUIElement>() {
 			public int compare(GUIElement e1, GUIElement e2) {
 				if (e1.getDepth() > e2.getDepth()) {
@@ -228,10 +211,10 @@ public class Renderer {
 			}
 		});
 		
-		
+		// Draw each element
 		for (GUIElement gui : engine.getScene().getGuiElements()) {
-			int x = (int) ((gui.getXPercentage() / 100) * Application.getWidth());
-			int y = (int) ((gui.getYPercentage() / 100) * Application.getHeight());
+			int x = (int) ((gui.getXPercentage() / 100) * Application.getWidth()) - gui.getWidth() / 2;
+			int y = (int) ((gui.getYPercentage() / 100) * Application.getHeight()) - gui.getHeight() / 2;
 			context.drawImage(gui.getImage(), x, y, gui.getWidth(), gui.getHeight(), null);
 		}
 	}

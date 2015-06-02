@@ -14,9 +14,9 @@ public class Physics implements Runnable {
 	}
 	
 	public void run() {
-		scene.callFixedUpdate();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
+				scene.callFixedUpdate();
 				physicsStep();
 			}
 		}, 0, 20);
@@ -27,6 +27,8 @@ public class Physics implements Runnable {
 		
 		// Act on each rigidbody
 		for (RigidBody item : rigidBodies) {
+			item.setColliding(false);
+			
 			// Apply constant forces
 			Vector3 forcesBeforeCollision = new Vector3();
 			
@@ -42,6 +44,7 @@ public class Physics implements Runnable {
 			Vector3 collisionForces = new Vector3();
 			for (Vector3 collisionPoint : collisionPoints) {
 				if (collisionPoint != null) {
+					item.setColliding(true);
 					// Collision movement unit vector
 					Vector3 collisionNormal = collisionPoint.getDifference(item.getPosition());
 					double surfacePenetration = item.getRadius() - collisionNormal.getMagnitude();
@@ -56,6 +59,9 @@ public class Physics implements Runnable {
 					Vector3 tangentComponent = normalComponent.getDifference(item.getVelocity());
 					normalComponent.scale(-1);
 					
+					// Include slight friction to slow down the ball's movements
+					tangentComponent.scale(0.975);
+					
 					// Scale by bounciness of ball
 					normalComponent.scale(0.4);
 					if (normalComponent.getMagnitude() < 0.1) {
@@ -68,10 +74,10 @@ public class Physics implements Runnable {
 					// Move item to surface so it isn't penetrating the collider
 					// NOTE: this might cause bugs with multiple sources of collision and may violate the conservation of energy
 					item.addPosition(collisionNormal.getNormalized().getScaled(surfacePenetration));
-
-//					Vector3 leverArm = item.getPosition().getDifference(collisionPoint);
-//					Vector3 force = forcesBeforeCollision.getScaled(item.getMass()).getScaled(-1);
-//					item.addForceAtPosition(force, leverArm);
+					
+					Vector3 leverArm = item.getPosition().getDifference(collisionPoint);
+					Vector3 force = forcesBeforeCollision.getScaled(item.getMass()).getScaled(-1);
+					item.addForceAtPosition(force, leverArm);
 				}
 			}
 			
@@ -101,6 +107,8 @@ public class Physics implements Runnable {
 			
 			// Apply angular acceleration to velocity
 			item.addAngularVelocity(angularAcceleration.getScaled(0.02));
+			
+			item.setAngularVelocity(item.getAngularVelocity().getScaled(0.975));
 			
 			// Apply angular velocity
 			Quaternion angularVelocity = new Quaternion(item.getAngularVelocity().getNormalized(), item.getAngularVelocity().getMagnitude() * 0.02);

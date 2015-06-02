@@ -20,6 +20,8 @@ public class Model extends GameObject {
 	private boolean trigger = false;
 	// Order to paint where the higher value is painted later (on top)
 	private int paintOrder = 0;
+	// Determines if the object is rendered
+	private boolean visible = true;
 	
 	public Model(String file) {
 		this(file, new Vector3(), new Vector3(), new Vector3(1, 1, 1));
@@ -33,6 +35,13 @@ public class Model extends GameObject {
 		this(file, position, rotation, new Vector3(1, 1, 1));
 	}
 	
+	public Model(String file, Vector3 position, Vector3 rotation, Vector3 scale) {
+		super(file, position, rotation, scale);
+		loadObj(file);
+		findCentroids();
+		setRotation(rotation);
+	}
+	
 	public int getPaintOrder() {
 		return paintOrder;
 	}
@@ -41,19 +50,20 @@ public class Model extends GameObject {
 		this.paintOrder = paintOrder;
 	}
 	
-	public Model(String file, Vector3 position, Vector3 rotation, Vector3 scale) {
-		super(file, position, rotation, scale);
-		loadObj(file);
-		findCentroids();
-		setRotation(rotation);
-	}
-	
 	public boolean isCollides() {
 		return collides;
 	}
 	
 	public void setCollides(boolean collides) {
 		this.collides = collides;
+	}
+	
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 	
 	public Vector3[] getVertices() {
