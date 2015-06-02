@@ -1,7 +1,6 @@
 package PicassoEngine;
 
-public class Vector2
-{
+public class Vector2 {
 	public double x;
 	public double y;
 	

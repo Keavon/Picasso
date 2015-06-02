@@ -1,7 +1,6 @@
 package PicassoEngine;
 
-public class Face
-{
+public class Face {
 	private int[] vertexIndexes;
 	private String color;
 	
