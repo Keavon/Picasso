@@ -1,4 +1,4 @@
-package Game;
+package Game.Scripts;
 
 import PicassoEngine.*;
 

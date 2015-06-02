@@ -1,7 +1,7 @@
 package Game.Scenes;
 
-import Game.BallMovement;
-import Game.CameraFollow;
+import Game.Scripts.BallMovement;
+import Game.Scripts.CameraFollow;
 import PicassoEngine.*;
 
 public class level1 extends Scene {
