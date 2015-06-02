@@ -17,7 +17,7 @@ public class KeyInput implements KeyListener {
 		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) Input.setKeyDown("Right");
 		else if (e.getKeyCode() == KeyEvent.VK_UP) Input.setKeyDown("Up");
 		else if (e.getKeyCode() == KeyEvent.VK_DOWN) Input.setKeyDown("Down");
-		else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) Input.getKeyDown("Escape");
+		else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) Input.setKeyDown("Escape");
 		else Input.setKeyDown(KeyEvent.getKeyText(e.getKeyCode()));
 	}
 	
@@ -27,7 +27,7 @@ public class KeyInput implements KeyListener {
 		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) Input.setKeyUp("Right");
 		else if (e.getKeyCode() == KeyEvent.VK_UP) Input.setKeyUp("Up");
 		else if (e.getKeyCode() == KeyEvent.VK_DOWN) Input.setKeyUp("Down");
-		else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) Input.getKeyDown("Escape");
+		else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) Input.setKeyUp("Escape");
 		else Input.setKeyUp(KeyEvent.getKeyText(e.getKeyCode()));
 	}
 }

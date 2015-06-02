@@ -9,7 +9,8 @@ public class GameObject {
 	private Vector3 scale;
 	private ArrayList<PicassoScript> scripts;
 	
-	// Name with default transformations
+	//Pre: Name of the gameobject
+	//Post: Creates a named gameobject in the origin without rotation
 	public GameObject(String name) {
 		this(name, new Vector3(), new Vector3(), new Vector3(1, 1, 1));
 	}
