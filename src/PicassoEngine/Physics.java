@@ -68,6 +68,10 @@ public class Physics implements Runnable {
 					// Move item to surface so it isn't penetrating the collider
 					// NOTE: this might cause bugs with multiple sources of collision and may violate the conservation of energy
 					item.addPosition(collisionNormal.getNormalized().getScaled(surfacePenetration));
+					
+					Vector3 leverArm = item.getPosition().getDifference(collisionPoint);
+					Vector3 force = forcesBeforeCollision.getScaled(item.getMass()).getScaled(-1);
+					item.addForceAtPosition(force, leverArm);
 				}
 			}
 			
@@ -90,6 +94,19 @@ public class Physics implements Runnable {
 			
 			// Displace rigidbodies with velocity
 			item.addPosition(item.getVelocity().getScaled(0.02));
+			
+			// Apply torque to angular acceleration
+			double inertia = 0.4 * item.getMass() * item.getRadius() * item.getRadius();
+			Vector3 angularAcceleration = item.getTorque().getScaled(1 / inertia);
+			
+			// Apply angular acceleration to velocity
+			item.addAngularVelocity(angularAcceleration.getScaled(0.02));
+			
+			// Apply angular velocity
+			Quaternion angularVelocity = new Quaternion(item.getAngularVelocity().getNormalized(), item.getAngularVelocity().getMagnitude() * 0.02);
+			item.setRotation(angularVelocity.times(item.getRotation()));
+			
+			item.resetTorque();
 		}
 	}
 	

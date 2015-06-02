@@ -60,6 +60,7 @@ public class Vector3 {
 	public double getMagnitude() {
 		return Math.sqrt(x * x + y * y + z * z);
 	}
+	
 	public double getMagnitudeSquared() {
 		return x * x + y * y + z * z;
 	}
@@ -73,6 +74,9 @@ public class Vector3 {
 	}
 	
 	public Vector3 getNormalized() {
+		if (getMagnitude() < 0.0001) {
+			return new Vector3(1, 0, 0);
+		}
 		return getScaled(1.0 / getMagnitude());
 	}
 	

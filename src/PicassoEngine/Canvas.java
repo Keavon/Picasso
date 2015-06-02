@@ -4,24 +4,27 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Canvas extends JPanel {
-	private Frame frame;
 	private MouseInput mouseListener;
+	PicassoEngine engine;
 	
-	public Canvas(Frame frame) {
+	public Canvas(PicassoEngine engine) {
+		this.engine = engine;
+		
 		// Add input listeners
-		mouseListener = new MouseInput(frame.getFrame());
+		mouseListener = new MouseInput(engine.getFrame());
 		new KeyInput(this);
-		new MouseWheelInput(frame.getFrame());
-		new MouseClickInput(frame.getFrame());
+		new MouseWheelInput(engine.getFrame());
+		new MouseClickInput(engine.getFrame());
 		
 		// Set up the frame
-		this.frame = frame;
 		setFocusable(true);
+		
+		// Initiate rendering
 		repaint();
 	}
 	
 	public void paintComponent(Graphics graphics) {
-		frame.getScene().getRenderer().render(graphics);
+		engine.getRenderer().render(graphics);
 	}
 	
 	public void recenterMouse() {

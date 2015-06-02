@@ -5,8 +5,7 @@ import java.awt.image.VolatileImage;
 import java.util.*;
 
 public class Renderer {
-	private boolean render = true;
-	private Frame frame;
+	private PicassoEngine engine;
 	private Camera camera;
 	Graphics2D context;
 	private int FPS = 0;
@@ -15,87 +14,77 @@ public class Renderer {
 	ArrayList<Vector3> debugLineEnd = new ArrayList<Vector3>();
 	ArrayList<String> debugLineColor = new ArrayList<String>();
 	
-	public Renderer(Frame frame) {
-		this.frame = frame;
-	}
-	
-	public void startRender() {
-		render = true;
-	}
-	
-	public void stopRender() {
-		render = false;
+	public Renderer(PicassoEngine engine) {
+		this.engine = engine;
 	}
 	
 	public void render(Graphics graphics) {
-		if (render) {
-			// Set the time at the very start of the frame
-			long lastLoopTime = System.nanoTime();
-			
-			// Initialize frame and context
-			VolatileImage frame = this.frame.getFrame().createVolatileImage(this.frame.getFrame().getWidth(), this.frame.getFrame().getHeight());
-			context = frame.createGraphics();
-			
-			// Update - Run game logic
-			this.frame.getScene().callUpdate();
-			
-			// LateUpdate - Run additional game logic
-			this.frame.getScene().callLateUpdate();
-			
-			// Reset mouse position and scroll rotation
-			Input.resetScrollRotation();
-			Input.resetMouseMovement();
-			this.frame.getCanvas().recenterMouse();
-			Input.resetKeysDown();
-			
-			// Draw skybox background
-			if (this.frame.getScene().activeSky != null) {
-				this.frame.getScene().activeSky.drawBackground(context, camera);
+		// Set the time at the very start of the frame
+		long lastLoopTime = System.nanoTime();
+		
+		// Initialize frame and context
+		VolatileImage frame = engine.getFrame().createVolatileImage(Application.getWidth(), Application.getHeight());
+		context = frame.createGraphics();
+		
+		// Update - Run game logic
+		engine.getScene().callUpdate();
+		
+		// LateUpdate - Run additional game logic
+		engine.getScene().callLateUpdate();
+		
+		// Reset mouse position and scroll rotation
+		Input.resetScrollRotation();
+		Input.resetMouseMovement();
+		engine.getCanvas().recenterMouse();
+		Input.resetKeysDown();
+		
+		// Draw skybox background
+		if (engine.getScene().sky != null) {
+			engine.getScene().sky.drawBackground(context, camera);
+		}
+		
+		// Render the camera view to the context
+		drawCameraView();
+		
+		// Paint frame to canvas
+		graphics.drawImage(frame, 0, 0, engine.getFrame());
+		
+		// Repaint the window which then calls the next frame
+		engine.getFrame().repaint();
+		
+		// Slow down if frames are rendering too fast
+		if ((System.nanoTime() - lastLoopTime) / 1000000000.0 < 0.016) {
+			try {
+				Thread.sleep(15 - (System.nanoTime() - lastLoopTime) / 1000000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			
-			// Render the camera view to the context
-			drawCameraView();
-			
-			// Paint frame to canvas
-			graphics.drawImage(frame, 0, 0, this.frame.getFrame());
-			
-			// Repaint the window which then calls the next frame
-			this.frame.getFrame().repaint();
-			
-			// Slow down if frames are rendering too fast
-			if ((System.nanoTime() - lastLoopTime) / 1000000000.0 < 0.016) {
-				try {
-					Thread.sleep(15 - (System.nanoTime() - lastLoopTime) / 1000000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			// Set deltaTime as the length of time in seconds that this frame took
-			Time.deltaTime = (System.nanoTime() - lastLoopTime) / 1000000000.0;
-			
-			// Log FPS
-			FPS++;
-			if (lastShown == 0) {
-				lastShown = System.nanoTime();
-			}
-			if (System.nanoTime() - lastShown >= 1000000000) {
-				//System.out.println(FPS);
-				lastShown = System.nanoTime();
-				FPS = 0;
-			}
+		}
+		
+		// Set deltaTime as the length of time in seconds that this frame took
+		Time.deltaTime = (System.nanoTime() - lastLoopTime) / 1000000000.0;
+		
+		// Log FPS
+		FPS++;
+		if (lastShown == 0) {
+			lastShown = System.nanoTime();
+		}
+		if (System.nanoTime() - lastShown >= 1000000000) {
+			//System.out.println(FPS);
+			lastShown = System.nanoTime();
+			FPS = 0;
 		}
 	}
 	
 	public void drawCameraView() {
 		// Get the camera
-		camera = frame.getScene().getActiveCamera();
+		camera = engine.getScene().getActiveCamera();
 		if (camera == null) {
 			return;
 		}
 		
 		// Collect the models to render
-		ArrayList<GameObject> objects = frame.getScene().getGameObjects();
+		ArrayList<GameObject> objects = engine.getScene().getGameObjects();
 		ArrayList<Model> allModels = new ArrayList<Model>();
 		for (GameObject object : objects) {
 			if (object instanceof Model) {
@@ -166,7 +155,7 @@ public class Renderer {
 						faceVertices[i] = new Vector2(projectedVertices[vertexIndexes[i]].x, projectedVertices[vertexIndexes[i]].y);
 						
 						// Check if it's on screen
-						if (faceVertices[i].x > 0 && faceVertices[i].x < frame.getFrame().getWidth() && faceVertices[i].y > 0 && faceVertices[i].y < frame.getFrame().getHeight() && projectedVertices[vertexIndexes[i]].z > 0) {
+						if (faceVertices[i].x > 0 && faceVertices[i].x < Application.getWidth() && faceVertices[i].y > 0 && faceVertices[i].y < Application.getHeight() && projectedVertices[vertexIndexes[i]].z > 0) {
 							onScreen = true;
 						}
 					}
@@ -237,23 +226,21 @@ public class Renderer {
 		
 		Vector3 screenPoint = new Vector3();
 		
-		screenPoint.x = Math.cos(camera.getRotation().y) * (Math.sin(camera.getRotation().z) * (point3d.y - camera.getPosition().y) + Math.cos(camera.getRotation().z) * (point3d.x - camera.getPosition().x)) - Math.sin(camera.getRotation().y) * (point3d.z - camera.getPosition().z) + 0.5;
-		
-		screenPoint.y = Math.sin(camera.getRotation().x) * (Math.cos(camera.getRotation().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().y) * (Math.sin(camera.getRotation().z) * (point3d.y - camera.getPosition().y) +
-				Math.cos(camera.getRotation().z) * (point3d.x - camera.getPosition().x))) + Math.cos(camera.getRotation().x) * (Math.cos(camera.getRotation().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().z) * (point3d.x - camera.getPosition().x)) + 0.5;
-		
-		screenPoint.z = Math.cos(camera.getRotation().x) * (Math.cos(camera.getRotation().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().y) * (Math.sin(camera.getRotation().z) * (point3d.y - camera.getPosition().y) +
-				Math.cos(camera.getRotation().z) * (point3d.x - camera.getPosition().x))) - Math.sin(camera.getRotation().x) * (Math.cos(camera.getRotation().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().z) * (point3d.x - camera.getPosition().x));
+		screenPoint.x = Math.cos(camera.getRotation().eulerAngles().y) * (Math.sin(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) + Math.cos(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x)) - Math.sin(camera.getRotation().eulerAngles().y) * (point3d.z - camera.getPosition().z) + 0.5;
+		screenPoint.y = Math.sin(camera.getRotation().eulerAngles().x) * (Math.cos(camera.getRotation().eulerAngles().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().eulerAngles().y) * (Math.sin(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) +
+				Math.cos(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x))) + Math.cos(camera.getRotation().eulerAngles().x) * (Math.cos(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x)) + 0.5;
+		screenPoint.z = Math.cos(camera.getRotation().eulerAngles().x) * (Math.cos(camera.getRotation().eulerAngles().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().eulerAngles().y) * (Math.sin(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) +
+				Math.cos(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x))) - Math.sin(camera.getRotation().eulerAngles().x) * (Math.cos(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x));
 		
 		Vector3 newPoint = new Vector3();
 		
-		double aspectRatio = (double) frame.getFrame().getWidth() / frame.getFrame().getHeight();
+		double aspectRatio = (double) engine.getFrame().getWidth() / engine.getFrame().getHeight();
 		double ez = 1 / Math.tan(camera.getFov() / 2);
 		double x = (screenPoint.x - .5) * (ez / screenPoint.z) / aspectRatio;
 		double y = -(screenPoint.y - .5) * (ez / screenPoint.z);
 		
-		newPoint.x = (int) (x * frame.getFrame().getWidth() + frame.getFrame().getWidth() / 2);
-		newPoint.y = (int) (y * frame.getFrame().getHeight() + frame.getFrame().getHeight() / 2);
+		newPoint.x = (int) (x * Application.getWidth() + Application.getWidth() / 2);
+		newPoint.y = (int) (y * Application.getHeight() + Application.getHeight() / 2);
 		newPoint.z = screenPoint.z;
 		
 		return newPoint;

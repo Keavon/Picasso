@@ -5,19 +5,17 @@ import java.util.ArrayList;
 public class Scene {
 	private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	private Vector3 gravity = new Vector3(0, -9.8, 0);
-	private Renderer renderer;
 	private Camera activeCamera;
-	public SkyBox activeSky;
+	public Sky sky;
 	
-	public Scene(Frame frame) {
-		this.renderer = new Renderer(frame);
+	public void startPhysics() {
 		Physics physics = new Physics(this);
 		Thread physicsThread = new Thread(physics);
 		physicsThread.start();
 	}
 	
-	public void setActiveSky(SkyBox s) {
-		this.activeSky = s;
+	public void setSky(Sky sky) {
+		this.sky = sky;
 	}
 	
 	public void addGameObject(GameObject object) {
@@ -42,10 +40,6 @@ public class Scene {
 	
 	public Camera getActiveCamera() {
 		return activeCamera;
-	}
-	
-	public Renderer getRenderer() {
-		return renderer;
 	}
 	
 	public void callUpdate() {
@@ -106,5 +100,9 @@ public class Scene {
 	
 	public Vector3 getGravity() {
 		return gravity;
+	}
+	
+	public void Load() {
+		// Called when scene is loaded
 	}
 }

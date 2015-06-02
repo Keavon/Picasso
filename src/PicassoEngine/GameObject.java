@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class GameObject {
 	private String name;
 	private Vector3 position;
-	private Vector3 rotation;
+	private Quaternion rotation;
 	private Vector3 scale;
 	private ArrayList<PicassoScript> scripts;
 	
@@ -25,10 +25,18 @@ public class GameObject {
 	}
 	
 	// Name, position, rotation, and scale
-	public GameObject(String name, Vector3 position, Vector3 rotation, Vector3 scale) {
+	public GameObject(String name, Vector3 position, Quaternion rotation, Vector3 scale) {
 		this.name = name;
 		this.position = position;
 		this.rotation = rotation;
+		this.scale = scale;
+		this.scripts = new ArrayList<PicassoScript>();
+	}
+	
+	public GameObject(String name, Vector3 position, Vector3 rotation, Vector3 scale) {
+		this.name = name;
+		this.position = position;
+		this.rotation = new Quaternion(rotation);
 		this.scale = scale;
 		this.scripts = new ArrayList<PicassoScript>();
 	}
@@ -53,16 +61,20 @@ public class GameObject {
 		setPosition(getPosition().getSum(deltaPosition));
 	}
 	
-	public Vector3 getRotation() {
+	public Quaternion getRotation() {
 		return rotation;
 	}
 	
 	public void setRotation(Vector3 rotation) {
+		this.rotation = new Quaternion(rotation);
+	}
+	
+	public void setRotation(Quaternion rotation) {
 		this.rotation = rotation;
 	}
 	
 	public void addRotation(Vector3 deltaRotation) {
-		setRotation(getRotation().getSum(deltaRotation));
+		setRotation(getRotation().times(new Quaternion(deltaRotation)));
 	}
 	
 	public Vector3 getScale() {
