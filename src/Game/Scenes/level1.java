@@ -16,6 +16,9 @@ public class level1 extends Scene {
 		// Start physics running
 		startPhysics();
 		
+		addGUIElement(new GUIElement(0, "images/GUI/powerup.png", 0, 0));
+		addGUIElement(new GUIElement(1, "images/GUI/rocket_powerup.png", 0, 0));
+		
 		// Add sky
 		setSky(new Sky("assets/images/skybox.png"));
 		

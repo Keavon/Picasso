@@ -50,7 +50,8 @@ public class CameraFollow extends PicassoScript {
 			Vector3 angleDifference = gameObject.getPosition().getDifference(target.getPosition());
 			Quaternion horizontalRotation = new Quaternion(new Vector3(0, Math.atan2(angleDifference.x, angleDifference.z), 0));
 			Quaternion verticalRotation = new Quaternion(new Vector3(-Math.asin(angleDifference.y / distance), 0, 0));
-			gameObject.setRotation(horizontalRotation.times(verticalRotation));		}
+			gameObject.setRotation(horizontalRotation.times(verticalRotation));
+		}
 	}
 	
 	public double getOrbitAngle() {

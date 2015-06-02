@@ -7,6 +7,19 @@ public class Scene {
 	private Vector3 gravity = new Vector3(0, -9.8, 0);
 	private Camera activeCamera;
 	public Sky sky;
+	ArrayList<GUIElement> guiElements = new ArrayList<GUIElement>();
+	
+	public void addGUIElement(GUIElement gui) {
+		guiElements.add(gui);
+	}
+	
+	public void clearGUIElements() {
+		guiElements.clear();
+	}
+	
+	public ArrayList<GUIElement> getGuiElements() {
+		return guiElements;
+	}
 	
 	public void startPhysics() {
 		Physics physics = new Physics(this);

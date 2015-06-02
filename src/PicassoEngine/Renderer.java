@@ -1,7 +1,12 @@
 package PicassoEngine;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.awt.image.VolatileImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Renderer {
@@ -45,6 +50,9 @@ public class Renderer {
 		
 		// Render the camera view to the context
 		drawCameraView();
+		
+		// Render GUI elements
+		drawGUIElements();
 		
 		// Paint frame to canvas
 		graphics.drawImage(frame, 0, 0, engine.getFrame());
@@ -139,9 +147,7 @@ public class Renderer {
 				
 				// Project vertices and put them in a corresponding screen space array
 				for (int vertex = 0; vertex < vertices.length; vertex++) {
-					
 					projectedVertices[vertex] = project(vertices[vertex]);
-					
 				}
 				
 				// Add all the vertices in all the faces in this model to a polygons ArrayList
@@ -206,6 +212,27 @@ public class Renderer {
 			Vector3 end = project(debugLineEnd.get(i));
 			context.setColor(Color.decode("#" + debugLineColor.get(i)));
 			context.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
+		}
+	}
+	
+	public void drawGUIElements() {
+		Collections.sort(engine.getScene().getGuiElements(), new Comparator<GUIElement>() {
+			public int compare(GUIElement e1, GUIElement e2) {
+				if (e1.getDepth() > e2.getDepth()) {
+					return 1;
+				} else if (e1.getDepth() < e2.getDepth()) {
+					return -1;
+				} else {
+					return 0;
+				}
+			}
+		});
+		
+		
+		for (GUIElement gui : engine.getScene().getGuiElements()) {
+			int x = (int) ((gui.getXPercentage() / 100) * Application.getWidth());
+			int y = (int) ((gui.getYPercentage() / 100) * Application.getHeight());
+			context.drawImage(gui.getImage(), x, y, gui.getWidth(), gui.getHeight(), null);
 		}
 	}
 	
