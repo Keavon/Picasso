@@ -10,6 +10,7 @@ public class RigidBody extends Model {
 	private Vector3 torque = new Vector3();
 	private Vector3 impulse = new Vector3();
 	private ArrayList<Vector3> forces = new ArrayList<Vector3>();
+	private boolean colliding = false;
 	
 	public RigidBody(String file) {
 		super(file);
@@ -115,5 +116,13 @@ public class RigidBody extends Model {
 	
 	public Vector3 getImpulse() {
 		return impulse;
+	}
+	
+	public void setColliding(boolean colliding) {
+		this.colliding = colliding;
+	}
+	
+	public boolean isColliding() {
+		return colliding;
 	}
 }

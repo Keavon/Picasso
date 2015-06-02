@@ -115,7 +115,7 @@ public class Scene {
 		return gravity;
 	}
 	
-	public void Load() {
+	public void Load(PicassoEngine engine) {
 		// Called when scene is loaded
 	}
 }

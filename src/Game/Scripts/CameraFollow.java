@@ -23,13 +23,13 @@ public class CameraFollow extends PicassoScript {
 		if (target != null) {
 			// Camera view orbit
 			orbitAngle -= Input.mouseMovement.x * orbitSpeedMouse;
-			if (Input.GetKey("Left")) orbitAngle -= orbitSpeedKeys * Time.deltaTime;
-			if (Input.GetKey("Right")) orbitAngle += orbitSpeedKeys * Time.deltaTime;
+			if (Input.getKey("Left")) orbitAngle -= orbitSpeedKeys * Time.deltaTime;
+			if (Input.getKey("Right")) orbitAngle += orbitSpeedKeys * Time.deltaTime;
 			
 			// Camera view elevation
-			if (Input.GetKey("Mouse1")) elevationAngle += Input.mouseMovement.y * elevationSpeedMouse;
-			if (Input.GetKey("Up") && elevationAngle <= 179.9) elevationAngle += elevationSpeedKeys * Time.deltaTime;
-			if (Input.GetKey("Down") && elevationAngle >= 90) elevationAngle -= elevationSpeedKeys * Time.deltaTime;
+			if (Input.getKey("Mouse1")) elevationAngle += Input.mouseMovement.y * elevationSpeedMouse;
+			if (Input.getKey("Up") && elevationAngle <= 179.9) elevationAngle += elevationSpeedKeys * Time.deltaTime;
+			if (Input.getKey("Down") && elevationAngle >= 90) elevationAngle -= elevationSpeedKeys * Time.deltaTime;
 			
 			// Clamp angles
 			if (elevationAngle > 179.9) elevationAngle = 179.9;
@@ -50,7 +50,7 @@ public class CameraFollow extends PicassoScript {
 			Vector3 angleDifference = gameObject.getPosition().getDifference(target.getPosition());
 			Quaternion horizontalRotation = new Quaternion(new Vector3(0, Math.atan2(angleDifference.x, angleDifference.z), 0));
 			Quaternion verticalRotation = new Quaternion(new Vector3(-Math.asin(angleDifference.y / distance), 0, 0));
-			gameObject.setRotation(horizontalRotation.times(verticalRotation));
+			gameObject.setRotation(horizontalRotation.getProduct(verticalRotation));
 		}
 	}
 	

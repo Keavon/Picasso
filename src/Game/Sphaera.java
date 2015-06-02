@@ -1,10 +1,10 @@
 package Game;
 
-import Game.Scenes.level1;
+import Game.Scenes.*;
 import PicassoEngine.*;
 
 public class Sphaera {
 	public static void main(String[] args) {
-		new PicassoEngine(new level1());
+		new PicassoEngine(new menu());
 	}
 }

@@ -5,9 +5,10 @@ import java.awt.*;
 
 public class Canvas extends JPanel {
 	private MouseInput mouseListener;
-	PicassoEngine engine;
+	private PicassoEngine engine;
+	private boolean recenterMouse = false;
 	
-	//Pre: The frame
+	//Pre: The engine
 	//Post: Sets the frame, creates the mouse and keyboard listeners, and starts drawing
 	public Canvas(PicassoEngine engine) {
 		this.engine = engine;
@@ -34,6 +35,12 @@ public class Canvas extends JPanel {
 	//Pre: None
 	//Post: Returns mouse listener
 	public void recenterMouse() {
-		mouseListener.recenterMouse();
+		if (recenterMouse) {
+			mouseListener.recenterMouse();
+		}
+	}
+	
+	public void setRecenterMouse(boolean recenter) {
+		recenterMouse = recenter;
 	}
 }
