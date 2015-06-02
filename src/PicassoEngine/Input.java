@@ -10,8 +10,7 @@ public class Input {
 	private static int mouseScrollRotation = 0;
 	
 	public static boolean GetKey(String keyCode) {
-		boolean keyPushed = keys.getOrDefault(keyCode, false);
-		return keyPushed;
+		return keys.getOrDefault(keyCode, false);
 	}
 	
 	public static void setKeyDown(String keyCode) {
