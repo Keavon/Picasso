@@ -2,6 +2,7 @@ package Game.Scenes;
 
 import Game.Scripts.BallMovement;
 import Game.Scripts.CameraFollow;
+import Game.Scripts.GameUI;
 import PicassoEngine.*;
 
 public class level1 extends Scene {
@@ -23,6 +24,7 @@ public class level1 extends Scene {
 		
 		// Add camera
 		Camera camera = new Camera(new Vector3(0, 3, -15));
+		camera.addScript(new GameUI(camera));
 		addGameObject(camera);
 		setActiveCamera(camera);
 		
