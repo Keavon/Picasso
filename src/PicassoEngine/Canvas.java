@@ -7,6 +7,8 @@ public class Canvas extends JPanel {
 	private MouseInput mouseListener;
 	PicassoEngine engine;
 	
+	//Pre: The frame
+	//Post: Sets the frame, creates the mouse and keyboard listeners, and starts drawing
 	public Canvas(PicassoEngine engine) {
 		this.engine = engine;
 		
@@ -23,10 +25,14 @@ public class Canvas extends JPanel {
 		repaint();
 	}
 	
+	//Pre: Graphics object for the canvas passed by Swing
+	//Post: Calls to render a frame
 	public void paintComponent(Graphics graphics) {
 		engine.getRenderer().render(graphics);
 	}
 	
+	//Pre: None
+	//Post: Returns mouse listener
 	public void recenterMouse() {
 		mouseListener.recenterMouse();
 	}
