@@ -1,6 +1,7 @@
 package PicassoEngine;
 
 public class Camera extends GameObject {
+	// Field of view of the camera
 	public double fov = Math.PI / 2;
 	
 	//Pre: Location in world space

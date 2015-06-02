@@ -4,14 +4,10 @@ import Game.Scripts.BallMovement;
 import Game.Scripts.CameraFollow;
 import Game.Scripts.SpinningGoal;
 import PicassoEngine.*;
-import sun.audio.AudioData;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
-import sun.audio.ContinuousAudioDataStream;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class level1 extends Scene {
 	public void Load(PicassoEngine engine) {

@@ -25,7 +25,7 @@ public class Sky {
 			return;
 		}
 		
-		Vector3 camRot = camera.getRotation().eulerAngles();
+		Vector3 camRot = camera.getRotation().getEulerAngles();
 		// Fix flipped orientations
 		if (Math.abs(camRot.z) > 0.01) {
 			camRot.x += Math.PI;

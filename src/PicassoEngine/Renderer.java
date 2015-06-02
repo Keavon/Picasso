@@ -236,11 +236,11 @@ public class Renderer {
 		
 		Vector3 screenPoint = new Vector3();
 		
-		screenPoint.x = Math.cos(camera.getRotation().eulerAngles().y) * (Math.sin(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) + Math.cos(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x)) - Math.sin(camera.getRotation().eulerAngles().y) * (point3d.z - camera.getPosition().z) + 0.5;
-		screenPoint.y = Math.sin(camera.getRotation().eulerAngles().x) * (Math.cos(camera.getRotation().eulerAngles().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().eulerAngles().y) * (Math.sin(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) +
-				Math.cos(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x))) + Math.cos(camera.getRotation().eulerAngles().x) * (Math.cos(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x)) + 0.5;
-		screenPoint.z = Math.cos(camera.getRotation().eulerAngles().x) * (Math.cos(camera.getRotation().eulerAngles().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().eulerAngles().y) * (Math.sin(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) +
-				Math.cos(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x))) - Math.sin(camera.getRotation().eulerAngles().x) * (Math.cos(camera.getRotation().eulerAngles().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().eulerAngles().z) * (point3d.x - camera.getPosition().x));
+		screenPoint.x = Math.cos(camera.getRotation().getEulerAngles().y) * (Math.sin(camera.getRotation().getEulerAngles().z) * (point3d.y - camera.getPosition().y) + Math.cos(camera.getRotation().getEulerAngles().z) * (point3d.x - camera.getPosition().x)) - Math.sin(camera.getRotation().getEulerAngles().y) * (point3d.z - camera.getPosition().z) + 0.5;
+		screenPoint.y = Math.sin(camera.getRotation().getEulerAngles().x) * (Math.cos(camera.getRotation().getEulerAngles().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().getEulerAngles().y) * (Math.sin(camera.getRotation().getEulerAngles().z) * (point3d.y - camera.getPosition().y) +
+				Math.cos(camera.getRotation().getEulerAngles().z) * (point3d.x - camera.getPosition().x))) + Math.cos(camera.getRotation().getEulerAngles().x) * (Math.cos(camera.getRotation().getEulerAngles().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().getEulerAngles().z) * (point3d.x - camera.getPosition().x)) + 0.5;
+		screenPoint.z = Math.cos(camera.getRotation().getEulerAngles().x) * (Math.cos(camera.getRotation().getEulerAngles().y) * (point3d.z - camera.getPosition().z) + Math.sin(camera.getRotation().getEulerAngles().y) * (Math.sin(camera.getRotation().getEulerAngles().z) * (point3d.y - camera.getPosition().y) +
+				Math.cos(camera.getRotation().getEulerAngles().z) * (point3d.x - camera.getPosition().x))) - Math.sin(camera.getRotation().getEulerAngles().x) * (Math.cos(camera.getRotation().getEulerAngles().z) * (point3d.y - camera.getPosition().y) - Math.sin(camera.getRotation().getEulerAngles().z) * (point3d.x - camera.getPosition().x));
 		
 		Vector3 newPoint = new Vector3();
 		

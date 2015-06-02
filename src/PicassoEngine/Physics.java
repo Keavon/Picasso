@@ -112,7 +112,7 @@ public class Physics implements Runnable {
 			
 			// Apply angular velocity
 			Quaternion angularVelocity = new Quaternion(item.getAngularVelocity().getNormalized(), item.getAngularVelocity().getMagnitude() * 0.02);
-			item.setRotation(angularVelocity.times(item.getRotation()));
+			item.setRotation(angularVelocity.getProduct(item.getRotation()));
 			
 			item.resetTorque();
 		}
