@@ -52,5 +52,6 @@ public class PicassoEngine {
 	
 	public void loadScene(Scene scene) {
 		this.scene = scene;
+		scene.Load();
 	}
 }

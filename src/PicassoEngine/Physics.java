@@ -69,9 +69,9 @@ public class Physics implements Runnable {
 					// NOTE: this might cause bugs with multiple sources of collision and may violate the conservation of energy
 					item.addPosition(collisionNormal.getNormalized().getScaled(surfacePenetration));
 					
-					Vector3 leverArm = item.getPosition().getDifference(collisionPoint);
-					Vector3 force = forcesBeforeCollision.getScaled(item.getMass()).getScaled(-1);
-					item.addForceAtPosition(force, leverArm);
+//					Vector3 leverArm = item.getPosition().getDifference(collisionPoint);
+//					Vector3 force = forcesBeforeCollision.getScaled(item.getMass()).getScaled(-1);
+//					item.addForceAtPosition(force, leverArm);
 				}
 			}
 			
