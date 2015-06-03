@@ -27,8 +27,6 @@ public class Physics implements Runnable {
 		
 		// Act on each rigidbody
 		for (RigidBody item : rigidBodies) {
-			item.setColliding(false);
-			
 			// Apply constant forces
 			Vector3 forcesBeforeCollision = new Vector3();
 			
@@ -44,7 +42,6 @@ public class Physics implements Runnable {
 			Vector3 collisionForces = new Vector3();
 			for (Vector3 collisionPoint : collisionPoints) {
 				if (collisionPoint != null) {
-					item.setColliding(true);
 					// Collision movement unit vector
 					Vector3 collisionNormal = collisionPoint.getDifference(item.getPosition());
 					double surfacePenetration = item.getRadius() - collisionNormal.getMagnitude();
@@ -87,7 +84,7 @@ public class Physics implements Runnable {
 			Vector3 forceSum = new Vector3();
 			forceSum.add(forcesBeforeCollision);
 			forceSum.add(collisionForces);
-			
+			item.setColliding(collisionForces);
 			// Find acceleration from total forces
 			Vector3 acceleration = forceSum.getScaled(1.0 / item.getMass());
 			

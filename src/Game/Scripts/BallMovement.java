@@ -69,7 +69,6 @@ public class BallMovement extends PicassoScript {
 		
 		// Check for input after winning to go back to the menu
 		if (goalAchieved && (Input.getKeyDown("Mouse0") || Input.getKeyDown("Space"))) {
-			System.out.println("Loading menu");
 			if (levelNumber == 1) {
 				engine.loadScene(new level2());
 			} else {
@@ -80,9 +79,13 @@ public class BallMovement extends PicassoScript {
 	
 	public void FixedUpdate() {
 		// Jump when the space bar is pressed, when the object is colliding, and it's not jumped in the past 30 milliseconds
-		if (Input.getKey("Space") && ((RigidBody) gameObject).isColliding() && System.nanoTime() - lastJumpTime > 30000000) {
+		Vector3 collisionAngle = ((RigidBody) gameObject).isColliding().getScaled(-1);
+		if (collisionAngle.getMagnitude() < 0.01) return;
+		System.out.println(collisionAngle);
+		System.out.println(collisionAngle.getNormalized().getAngleDifference(scene.getGravity()));
+		if (Input.getKey("Space") && collisionAngle.getNormalized().getAngleDifference(scene.getGravity()) < Math.PI / 3 && System.nanoTime() - lastJumpTime > 30000000) {
 			lastJumpTime = System.nanoTime();
-			((RigidBody) gameObject).setColliding(false);
+			((RigidBody) gameObject).setColliding(new Vector3());
 			((RigidBody) gameObject).addImpulse(new Vector3(0, 0.075, 0));
 		}
 	}
