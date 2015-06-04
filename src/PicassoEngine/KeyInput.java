@@ -4,19 +4,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyInput implements KeyListener {
-	//Pre: Canvas
-	//Post: Adds a keylistener to the canvas
 	public KeyInput(Canvas canvas) {
 		canvas.addKeyListener(this);
 	}
 	
-	//Pre: Event
-	//Post: None
 	public void keyTyped(KeyEvent e) {
 	}
 	
-	//Pre: Event
-	//Post: Sets the event's key down
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) Input.setKeyDown("Space");
 		else if (e.getKeyCode() == KeyEvent.VK_LEFT) Input.setKeyDown("Left");
@@ -27,8 +21,6 @@ public class KeyInput implements KeyListener {
 		else Input.setKeyDown(KeyEvent.getKeyText(e.getKeyCode()));
 	}
 	
-	//Pre: Event
-	//Post: Sets the event's key up
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) Input.setKeyUp("Space");
 		else if (e.getKeyCode() == KeyEvent.VK_LEFT) Input.setKeyUp("Left");

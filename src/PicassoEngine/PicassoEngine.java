@@ -8,8 +8,6 @@ public class PicassoEngine {
 	private Scene scene;
 	private Renderer renderer;
 	
-	//Pre: None
-	//Post: Creates the frame and sets up everything necessary to run the game, creating the canvas and the scene
 	public PicassoEngine(Scene scene) {
 		// Create window frame
 		frame = new JFrame();
@@ -30,32 +28,22 @@ public class PicassoEngine {
 		frame.setVisible(true);
 	}
 	
-	//Pre: None
-	//Post: Returns the canvas
 	public Canvas getCanvas() {
 		return canvas;
 	}
 	
-	//Pre: None
-	//Post: Returns the Frame
 	public JFrame getFrame() {
 		return frame;
 	}
 	
-	//Pre: None
-	//Post: Returns the Scene
 	public Scene getScene() {
 		return scene;
 	}
 	
-	//Pre: None
-	//Post: Returns the renderer
 	public Renderer getRenderer() {
 		return renderer;
 	}
 	
-	//Pre: Scene to be loaded
-	//Post: Loads the passed scene over the current scene
 	public void loadScene(Scene scene) {
 		this.scene = scene;
 		scene.Load(this);

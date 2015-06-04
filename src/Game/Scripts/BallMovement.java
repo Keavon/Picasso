@@ -79,11 +79,9 @@ public class BallMovement extends PicassoScript {
 	
 	public void FixedUpdate() {
 		// Jump when the space bar is pressed, when the object is colliding, and it's not jumped in the past 30 milliseconds
-		Vector3 collisionAngle = ((RigidBody) gameObject).isColliding().getScaled(-1);
+		Vector3 collisionAngle = ((RigidBody) gameObject).isColliding();
 		if (collisionAngle.getMagnitude() < 0.01) return;
-		System.out.println(collisionAngle);
-		System.out.println(collisionAngle.getNormalized().getAngleDifference(scene.getGravity()));
-		if (Input.getKey("Space") && collisionAngle.getNormalized().getAngleDifference(scene.getGravity()) < Math.PI / 3 && System.nanoTime() - lastJumpTime > 30000000) {
+		if (Input.getKey("Space") && collisionAngle.getNormalized().getAngleDifference(scene.getGravity().getScaled(-1)) < Math.PI / 3 && System.nanoTime() - lastJumpTime > 30000000) {
 			lastJumpTime = System.nanoTime();
 			((RigidBody) gameObject).setColliding(new Vector3());
 			((RigidBody) gameObject).addImpulse(new Vector3(0, 0.075, 0));

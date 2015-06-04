@@ -21,26 +21,18 @@ public class Model extends GameObject {
 	// Determines if the object is rendered
 	private boolean visible = true;
 	
-	// Pre: Model file path
-	// Post: Creates object with default transforms
 	public Model(String file) {
 		this(file, new Vector3(), new Vector3(), new Vector3(1, 1, 1));
 	}
 	
-	// Pre: Model file path and position
-	// Post: Creates object with given position and default scale and rotation
 	public Model(String file, Vector3 position) {
 		this(file, position, new Vector3(), new Vector3(1, 1, 1));
 	}
 	
-	// Pre: Model file path, position, and rotation
-	// Post: Creates object with given position, rotation, and default scale
 	public Model(String file, Vector3 position, Vector3 rotation) {
 		this(file, position, rotation, new Vector3(1, 1, 1));
 	}
 	
-	// Pre: Model file path, position, rotation, and scale
-	// Post: Creates object with given transforms
 	public Model(String file, Vector3 position, Vector3 rotation, Vector3 scale) {
 		super(file, position, rotation, scale);
 		loadObj(file);
@@ -102,32 +94,7 @@ public class Model extends GameObject {
 	
 	public void setRotation(Vector3 newRotation) {
 		super.setRotation(newRotation);
-		
-		// Rotate vertices
-		for (int i = 0; i < vertices.length; i++) {
-//			transformedVertices[i].x = vertices[i].x * (Math.cos(super.getRotation().y) * Math.cos(super.getRotation().z)) + vertices[i].y * (Math.cos(super.getRotation().x) * Math.sin(super.getRotation().z) + Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z)) + vertices[i].z * (Math.sin(super.getRotation().x) * Math.sin(super.getRotation().z) - Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z));
-//			transformedVertices[i].y = vertices[i].x * (-Math.cos(super.getRotation().y) * Math.sin(super.getRotation().z)) + vertices[i].y * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().z) - Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z)) + vertices[i].z * (Math.sin(super.getRotation().x) * Math.cos(super.getRotation().z) + Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z));
-//			transformedVertices[i].z = vertices[i].x * (Math.sin(super.getRotation().y)) + vertices[i].y * (-Math.sin(super.getRotation().x) * Math.cos(super.getRotation().y)) + vertices[i].z * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().y));
-			
-			// Rotate
-			transformedVertices[i] = getRotation().getRotatedPoint(vertices[i]);
-			
-			// Scale
-			transformedVertices[i] = transformedVertices[i].getProduct(getScale());
-		}
-		
-		// Rotate face centroids
-		for (int i = 0; i < faceCenters.length; i++) {
-//			transformedFaceCenters[i].x = faceCenters[i].x * (Math.cos(super.getRotation().y) * Math.cos(super.getRotation().z)) + faceCenters[i].y * (Math.cos(super.getRotation().x) * Math.sin(super.getRotation().z) + Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z)) + faceCenters[i].z * (Math.sin(super.getRotation().x) * Math.sin(super.getRotation().z) - Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.cos(super.getRotation().z));
-//			transformedFaceCenters[i].y = faceCenters[i].x * (-Math.cos(super.getRotation().y) * Math.sin(super.getRotation().z)) + faceCenters[i].y * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().z) - Math.sin(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z)) + faceCenters[i].z * (Math.sin(super.getRotation().x) * Math.cos(super.getRotation().z) + Math.cos(super.getRotation().x) * Math.sin(super.getRotation().y) * Math.sin(super.getRotation().z));
-//			transformedFaceCenters[i].z = faceCenters[i].x * (Math.sin(super.getRotation().y)) + faceCenters[i].y * (-Math.sin(super.getRotation().x) * Math.cos(super.getRotation().y)) + faceCenters[i].z * (Math.cos(super.getRotation().x) * Math.cos(super.getRotation().y));
-			
-			// Rotate
-			transformedFaceCenters[i] = getRotation().getRotatedPoint(faceCenters[i]);
-			
-			// Scale
-			transformedFaceCenters[i] = transformedFaceCenters[i].getProduct(super.getScale());
-		}
+		setRotation(getRotation());
 	}
 	
 	public void setRotation(Quaternion newRotation) {
@@ -136,7 +103,6 @@ public class Model extends GameObject {
 		for (int i = 0; i < vertices.length; i++) {
 			// Rotate
 			transformedVertices[i] = newRotation.getRotatedPoint(vertices[i]);
-			
 			// Scale
 			transformedVertices[i] = transformedVertices[i].getProduct(getScale());
 		}
@@ -145,7 +111,6 @@ public class Model extends GameObject {
 		for (int i = 0; i < faceCenters.length; i++) {
 			// Rotate
 			transformedFaceCenters[i] = newRotation.getRotatedPoint(faceCenters[i]);
-			
 			// Scale
 			transformedFaceCenters[i] = transformedFaceCenters[i].getProduct(super.getScale());
 		}

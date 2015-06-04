@@ -74,7 +74,6 @@ public class RigidBody extends Model {
 	}
 	
 	public void addForceAtPosition(Vector3 force, Vector3 position) {
-		//addForce(force);
 		addTorque(position.getCrossProduct(force));
 	}
 	
