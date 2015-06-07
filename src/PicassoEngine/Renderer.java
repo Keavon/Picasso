@@ -36,7 +36,7 @@ public class Renderer {
 		engine.getCanvas().recenterMouse();
 		Input.resetKeysDown();
 		
-		// Draw skybox background
+		// Draw sky background
 		if (engine.getScene().sky != null) {
 			engine.getScene().sky.drawBackground(context, camera);
 		}
@@ -213,9 +213,11 @@ public class Renderer {
 		
 		// Draw each element
 		for (GUIElement gui : engine.getScene().getGuiElements()) {
-			int x = (int) ((gui.getXPercentage() / 100) * Application.getWidth()) - gui.getWidth() / 2;
-			int y = (int) ((gui.getYPercentage() / 100) * Application.getHeight()) - gui.getHeight() / 2;
-			context.drawImage(gui.getImage(), x, y, gui.getWidth(), gui.getHeight(), null);
+			if (gui.isVisible()) {
+				int x = (int) (((gui.getXPercentage() / 100) * Application.getWidth()) - (gui.getHorizontalCenterPercentage() / 100 * gui.getWidth()) + gui.getHorizontalOffset());
+				int y = (int) (((gui.getYPercentage() / 100) * Application.getHeight()) - (gui.getVerticalCenterPercentage() / 100 * gui.getHeight()) + gui.getVerticalOffset());
+				context.drawImage(gui.getImage(), x, y, gui.getWidth(), gui.getHeight(), null);
+			}
 		}
 	}
 	

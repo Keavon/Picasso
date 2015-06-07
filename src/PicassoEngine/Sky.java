@@ -29,8 +29,13 @@ public class Sky {
 		// Fix flipped orientations
 		if (Math.abs(camRot.z) > 0.01) {
 			camRot.x += Math.PI;
+			if (Math.abs(camRot.x - Math.PI * 2) < 0.01) {
+				camRot.x = 0;
+			}
 			camRot.y = Math.PI - camRot.y;
+			camRot.z = 0;
 		}
+
 		double rotX = camRot.y + 3 * Math.PI / 4;
 		rotX %= 2 * Math.PI;
 		if (rotX < 0) {

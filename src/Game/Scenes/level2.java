@@ -7,9 +7,6 @@ import PicassoEngine.*;
 
 public class level2 extends Scene {
 	public void Load(PicassoEngine engine) {
-		// Play game in goFullscreen
-		Application.goFullscreen();
-		
 		// Hide mouse cursor
 		Application.hideCursor();
 		
@@ -17,7 +14,7 @@ public class level2 extends Scene {
 		startPhysics();
 		
 		// Add sky
-		setSky(new Sky("assets/images/skybox.png"));
+		setSky(new Sky("assets/images/sky.jpg"));
 		
 		// Add ball
 		RigidBody ball = new RigidBody("models/ball.obj", new Vector3(0, 1, 0), new Vector3(), new Vector3(0.25, 0.25, 0.25));
@@ -32,7 +29,7 @@ public class level2 extends Scene {
 		camera.addScript(cameraFollow);
 		
 		// Add scripts to ball
-		BallMovement ballMovement = new BallMovement(ball, cameraFollow, this, engine, 2);
+		BallMovement ballMovement = new BallMovement(ball, cameraFollow, this, engine, 2, 0);
 		ball.addScript(ballMovement);
 		addGameObject(ball);
 		

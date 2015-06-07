@@ -12,10 +12,10 @@ public class Canvas extends JPanel {
 		this.engine = engine;
 		
 		// Add input listeners
-		mouseListener = new MouseInput(engine.getFrame());
+		mouseListener = new MouseInput(this);
 		new KeyInput(this);
-		new MouseWheelInput(engine.getFrame());
-		new MouseClickInput(engine.getFrame());
+		new MouseWheelInput(this);
+		new MouseClickInput(this);
 		
 		// Set up the frame
 		setFocusable(true);

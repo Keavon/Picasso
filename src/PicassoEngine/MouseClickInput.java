@@ -5,8 +5,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class MouseClickInput implements MouseListener {
-	public MouseClickInput(JFrame frame) {
-		frame.addMouseListener(this);
+	public MouseClickInput(Canvas canvas) {
+		canvas.addMouseListener(this);
 	}
 	
 	public void mouseClicked(MouseEvent e) {

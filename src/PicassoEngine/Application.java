@@ -8,6 +8,7 @@ public class Application {
 	private static Canvas canvas;
 	private static PicassoEngine engine;
 	private static boolean notFullscreen = true;
+	private static boolean cursorVisible = true;
 	
 	public Application(JFrame f, Canvas c, PicassoEngine e) {
 		frame = f;
@@ -19,11 +20,17 @@ public class Application {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		frame.setCursor(toolkit.createCustomCursor(toolkit.getImage(""), new Point(frame.getX(), frame.getY()), "img"));
 		canvas.setRecenterMouse(true);
+		cursorVisible = false;
 	}
 	
 	public static void showCursor() {
 		frame.setCursor(Cursor.getDefaultCursor());
 		canvas.setRecenterMouse(false);
+		cursorVisible = true;
+	}
+	
+	public static boolean isCursorVisible() {
+		return cursorVisible;
 	}
 	
 	public static void quit() {

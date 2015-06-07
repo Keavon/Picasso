@@ -13,13 +13,15 @@ public class BallMovement extends PicassoScript {
 	private PicassoEngine engine;
 	private int levelNumber;
 	private long lastJumpTime = 0;
+	private int viewResetAngle;
 	
-	public BallMovement(GameObject gameObject, CameraFollow cameraFollow, Scene scene, PicassoEngine engine, int levelNumber) {
+	public BallMovement(GameObject gameObject, CameraFollow cameraFollow, Scene scene, PicassoEngine engine, int levelNumber, int viewResetAngle) {
 		super(gameObject);
 		this.levelNumber = levelNumber;
 		this.engine = engine;
 		this.scene = scene;
 		this.cameraFollow = cameraFollow;
+		this.viewResetAngle = viewResetAngle;
 		RigidBody ball = (RigidBody) gameObject;
 		ball.addForce(movementForce);
 	}
@@ -58,13 +60,14 @@ public class BallMovement extends PicassoScript {
 			((RigidBody) gameObject).setAngularVelocity(new Vector3());
 			gameObject.setRotation(new Vector3());
 			gameObject.setPosition(new Vector3(0, 1, 0));
+			cameraFollow.setOrbitAngle(viewResetAngle);
 		}
 		
 		// Show the Level Completed screen when you win
 		if (goal != null && !goalAchieved && goal.getPosition().getDifference(gameObject.getPosition()).getMagnitude() < 2.5) {
 			goalAchieved = true;
-			scene.addGUIElement(new GUIElement(100, "images/GUI/black_transparent.png", 0, 0, 10000, 10000));
-			scene.addGUIElement(new GUIElement(101, "images/GUI/level_completed.png", 50, 50));
+			scene.addGUIElement(new GUIElement(100, "images/GUI/black_transparent.png", 0, 0, 10000, 10000, 50, 50, 0, 0));
+			scene.addGUIElement(new GUIElement(101, "images/GUI/level_completed.png", 50, 50, 50, 50, 0, 0));
 		}
 		
 		// Check for input after winning to go back to the menu

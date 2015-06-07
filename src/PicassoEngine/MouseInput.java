@@ -8,15 +8,15 @@ import java.awt.event.MouseMotionListener;
 public class MouseInput implements MouseMotionListener {
 	private double oldMouseX;
 	private double oldMouseY;
-	private JFrame frame;
+	private Canvas canvas;
 	private Robot robot;
 	
-	public MouseInput(JFrame frame) {
-		this.frame = frame;
-		frame.addMouseMotionListener(this);
+	public MouseInput(Canvas canvas) {
+		this.canvas = canvas;
+		canvas.addMouseMotionListener(this);
 		
-		oldMouseY = frame.getWidth() / 2;
-		oldMouseX = frame.getHeight() / 2;
+		oldMouseY = canvas.getWidth() / 2;
+		oldMouseX = canvas.getHeight() / 2;
 		
 		try {
 			robot = new java.awt.Robot();
@@ -27,11 +27,11 @@ public class MouseInput implements MouseMotionListener {
 	
 	public void recenterMouse() {
 		if (robot != null) {
-			Point p = new Point(frame.getWidth() / 2, frame.getHeight() / 2);
-			SwingUtilities.convertPointToScreen(p, frame);
+			Point p = new Point(canvas.getWidth() / 2, canvas.getHeight() / 2);
+			SwingUtilities.convertPointToScreen(p, canvas);
 			robot.mouseMove(p.x, p.y);
-			oldMouseX = frame.getWidth() / 2;
-			oldMouseY = frame.getHeight() / 2;
+			oldMouseX = canvas.getWidth() / 2;
+			oldMouseY = canvas.getHeight() / 2;
 		}
 	}
 	
@@ -39,11 +39,11 @@ public class MouseInput implements MouseMotionListener {
 		Input.addMouseMovement(new Vector2(e.getX() - oldMouseX, e.getY() - oldMouseY));
 		oldMouseX = e.getX();
 		oldMouseY = e.getY();
+		Input.setMouseX(e.getX());
+		Input.setMouseY(e.getY());
 	}
 	
 	public void mouseMoved(MouseEvent e) {
-		Input.addMouseMovement(new Vector2(e.getX() - oldMouseX, e.getY() - oldMouseY));
-		oldMouseX = e.getX();
-		oldMouseY = e.getY();
+		mouseDragged(e);
 	}
 }

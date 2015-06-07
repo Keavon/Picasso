@@ -10,7 +10,15 @@ public class Scene {
 	ArrayList<GUIElement> guiElements = new ArrayList<GUIElement>();
 	
 	public void addGUIElement(GUIElement gui) {
-		guiElements.add(gui);
+		if (!guiElements.contains(gui)) {
+			guiElements.add(gui);
+		}
+	}
+	
+	public void removeGUIElement(GUIElement gui) {
+		if (guiElements.contains(gui)) {
+			guiElements.remove(gui);
+		}
 	}
 	
 	public void clearGUIElements() {

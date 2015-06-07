@@ -57,4 +57,8 @@ public class CameraFollow extends PicassoScript {
 	public double getOrbitAngle() {
 		return orbitAngle;
 	}
+	
+	public void setOrbitAngle(double angle) {
+		orbitAngle = angle;
+	}
 }
