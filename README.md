@@ -18,4 +18,4 @@ Picasso is a very simple 3D game engine and physics engine written from scratch 
 ### Marble Demo Game
 [Download the marble demo game](https://github.com/Keavon/Picasso/releases)
 
-[![Click to Play Video](https://i.imgur.com/ZsccmUv.png)](https://www.youtube.com/watch?v=6BFcBsFAYqU)
+[![Click to Play Video](http://i.imgur.com/lVgFotx.png)](https://www.youtube.com/watch?v=6BFcBsFAYqU)
